@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import SearchBar from './components/searchbar/SearchBar';
+import CharacterList from './components/characterList/CharacterList.tsx';
 
 interface Props {}
 
@@ -8,9 +9,12 @@ interface State {
 }
 
 class App extends Component<Props, State> {
-  state: State = {
-    searchTerm: '',
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      searchTerm: '',
+    };
+  }
 
   handleSearch = (searchTerm: string) => {
     this.setState({ searchTerm });
@@ -20,6 +24,7 @@ class App extends Component<Props, State> {
     return (
       <div>
         <SearchBar onSearch={this.handleSearch} />
+        <CharacterList searchTerm={this.state.searchTerm} />
       </div>
     );
   }
