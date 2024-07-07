@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import SearchBar from './components/searchbar/SearchBar';
-import CharacterList from './components/characterList/CharacterList.tsx';
+import CharacterList from './components/characterList/CharacterList';
 
 interface Props {}
 
@@ -11,12 +11,14 @@ interface State {
 class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    const savedSearchTerm = localStorage.getItem('searchTerm') || '';
     this.state = {
-      searchTerm: '',
+      searchTerm: savedSearchTerm,
     };
   }
 
   handleSearch = (searchTerm: string) => {
+    localStorage.setItem('searchTerm', searchTerm);
     this.setState({ searchTerm });
   };
 
