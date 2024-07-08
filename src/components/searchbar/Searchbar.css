@@ -3,8 +3,10 @@
   align-items: center;
   border-radius: 5px;
   overflow: hidden;
-  width: calc(30vw);
-  margin-top: 100px;
+  width: calc(100% - 75vw);
+  min-width: 500px;
+  position: absolute;
+  bottom: 15%;
 }
 
 .searchbar .input {
@@ -40,7 +42,7 @@
 
 @media screen and (max-width: 1240px) {
   .searchbar {
-    width: calc(50vw);
+    width: calc(100% - 50vw);
   }
 }
 
@@ -49,6 +51,6 @@
 
 @media screen and (max-width: 768px) {
   .searchbar {
-    width: calc(80vw);
+    min-width: 320px;
   }
 }
