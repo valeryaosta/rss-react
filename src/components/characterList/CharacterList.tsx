@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import Spinner from '../spinner/Spinner';
 import { getCharacters } from '../../api/api.ts';
 import './CharacterList.css';
 
@@ -78,11 +79,11 @@ class CharacterList extends Component<Props, State> {
     const { characters, isLoading, error } = this.state;
 
     if (isLoading) {
-      return <p>Loading...</p>;
+      return <Spinner />;
     }
 
     if (error) {
-      return <p>{error}</p>;
+      return <p>{error || <div>Some error occurred</div>}</p>;
     }
 
     return (
