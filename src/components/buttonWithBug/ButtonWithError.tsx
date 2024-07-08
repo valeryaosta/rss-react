@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import './ButtonWithError.css';
 
 interface Props {}
 
@@ -19,7 +20,11 @@ class ButtonWithError extends Component<Props, State> {
     if (this.state.clicked) {
       throw new Error('Imitate application error...');
     }
-    return <button onClick={this.handleClick}>Click to receive Error</button>;
+    return (
+      <button onClick={this.handleClick} className='btn-error'>
+        Click to receive Error
+      </button>
+    );
   }
 }
 

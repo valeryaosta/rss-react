@@ -1,13 +1,26 @@
 import { Component } from 'react';
 import { getCharacters } from '../../api/api.ts';
+import './CharacterList.css';
 
 type Character = {
   id: number;
   name: string;
   status: string;
   species: string;
+  type: string;
   gender: string;
+  origin: {
+    name: string;
+    url: string;
+  };
+  location: {
+    name: string;
+    url: string;
+  };
   image: string;
+  episode: string[];
+  url: string;
+  created: string;
 };
 
 type Props = {
@@ -50,6 +63,17 @@ class CharacterList extends Component<Props, State> {
     }
   }
 
+  getStatusColor(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'alive':
+        return 'green';
+      case 'dead':
+        return 'red';
+      default:
+        return 'gray';
+    }
+  }
+
   render() {
     const { characters, isLoading, error } = this.state;
 
@@ -62,13 +86,28 @@ class CharacterList extends Component<Props, State> {
     }
 
     return (
-      <div>
+      <div className='character-list'>
         {characters.map((character) => (
-          <div key={character.id}>
+          <div key={character.id} className='character-card'>
             <img src={character.image} alt={character.name} />
-            <p>{character.name}</p>
-            <p>species: {character.species}</p>
-            <p>status: {character.status}</p>
+            <div className='character-info'>
+              <p>{character.name}</p>
+              <div className='status'>
+                <span
+                  className='status-indicator'
+                  style={{ backgroundColor: this.getStatusColor(character.status) }}
+                ></span>
+                {character.status} - {character.species}
+              </div>
+              <p className='specific-text'>
+                <span className='specific'>Last Known Location: </span>
+                {character.location?.name}
+              </p>
+              <p className='specific-text'>
+                <span className='specific'>First Seen In: </span>
+                {character.origin?.name}
+              </p>
+            </div>
           </div>
         ))}
       </div>
