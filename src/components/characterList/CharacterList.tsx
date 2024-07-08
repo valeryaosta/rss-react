@@ -44,7 +44,7 @@ class CharacterList extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.fetchCharacters();
+    this.fetchCharacters(this.props.searchTerm);
   }
 
   componentDidUpdate(prevProps: Props) {
