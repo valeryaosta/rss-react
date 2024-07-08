@@ -3,6 +3,7 @@ import SearchBar from './components/searchbar/SearchBar';
 import CharacterList from './components/characterList/CharacterList';
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
 import ButtonWithError from './components/buttonWithBug/ButtonWithError';
+import FallbackContent from './components/fallbackContent/FallbackContent';
 import './App.css';
 
 interface Props {}
@@ -29,7 +30,7 @@ class App extends Component<Props, State> {
 
   render() {
     return (
-      <ErrorBoundary fallback={<h1>Something went wrong. Please try again later.</h1>}>
+      <ErrorBoundary fallback={<FallbackContent />}>
         <div className='app-container'>
           <div className='searchbar-section'>
             <ButtonWithError />
