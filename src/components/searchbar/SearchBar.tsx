@@ -18,7 +18,12 @@ class SearchBar extends Component<Props, State> {
   }
 
   handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchTerm: event.target.value });
+    const searchTerm = event.target.value;
+    this.setState({ searchTerm });
+
+    if (searchTerm.trim() === '') {
+      this.props.onSearch('');
+    }
   };
 
   handleSearch = () => {
