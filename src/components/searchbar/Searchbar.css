@@ -1,0 +1,33 @@
+.searchbar {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  max-width: 760px;
+}
+
+.searchbar .input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+}
+
+.searchbar .input:focus {
+  outline: none;
+}
+
+.searchbar .search-btn {
+  border: none;
+  border-radius: 0;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.searchbar .search-btn img {
+  width: 15px;
+}

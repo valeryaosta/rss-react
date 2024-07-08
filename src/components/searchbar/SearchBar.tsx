@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import SearchIcon from '../../assets/search.svg';
+import './Searchbar.css';
 
 type Props = {
+  searchTerm: string;
   onSearch: (searchTerm: string) => void;
 };
 
@@ -25,9 +28,12 @@ class SearchBar extends Component<Props, State> {
 
   render() {
     return (
-      <div>
-        <input type='text' value={this.state.searchTerm} onChange={this.handleInputChange} />
-        <button onClick={this.handleSearch}>Search</button>
+      <div className='searchbar'>
+        <input type='search' value={this.state.searchTerm} onChange={this.handleInputChange} className='input' />
+        <button onClick={this.handleSearch} disabled={!this.state.searchTerm.trim()} className='search-btn'>
+          <img src={SearchIcon} alt='search icon' />
+          Search
+        </button>
       </div>
     );
   }

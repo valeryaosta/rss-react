@@ -27,14 +27,10 @@ class App extends Component<Props, State> {
   };
 
   render() {
-    if (this.state.throwError) {
-      throw new Error('Test error');
-    }
-
     return (
       <ErrorBoundary fallback={<h1>Something went wrong. Please try again later.</h1>}>
         <div className='app-container'>
-          <SearchBar onSearch={this.handleSearch} />
+          <SearchBar searchTerm={this.state.searchTerm} onSearch={this.handleSearch} />
           <ButtonWithError />
           <CharacterList searchTerm={this.state.searchTerm} />
         </div>
