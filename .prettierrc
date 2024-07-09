@@ -8,5 +8,5 @@
   "bracketSpacing": true,
   "proseWrap": "always",
   "jsxSingleQuote": true,
-  "jsxBracketSameLine": false
+  "endOfLine": "auto"
 }
