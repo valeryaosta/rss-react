@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchIcon from '../../assets/search.svg';
 import './Searchbar.css';
 
@@ -7,41 +7,43 @@ type Props = {
   onSearch: (searchTerm: string) => void;
 };
 
-type State = {
-  searchTerm: string;
-};
+const SearchBar = ({ searchTerm, onSearch }: Props) => {
+  const [localSearchTerm, setLocalSearchTerm] = useState<string>(searchTerm);
 
-class SearchBar extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { searchTerm: props.searchTerm };
-  }
+  useEffect(() => {
+    setLocalSearchTerm(searchTerm);
+  }, [searchTerm]);
 
-  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = event.target.value;
-    this.setState({ searchTerm });
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalSearchTerm(event.target.value);
+  };
 
-    if (searchTerm.trim() === '') {
-      this.props.onSearch('');
+  const handleSearch = () => {
+    onSearch(localSearchTerm.trim());
+  };
+
+  const handleInput = (event: React.FormEvent<HTMLInputElement>) => {
+    const { value } = event.currentTarget;
+    if (value === '') {
+      onSearch('');
     }
   };
 
-  handleSearch = () => {
-    const { searchTerm } = this.state;
-    this.props.onSearch(searchTerm.trim());
-  };
-
-  render() {
-    return (
-      <div className='searchbar'>
-        <input type='search' value={this.state.searchTerm} onChange={this.handleInputChange} className='input' />
-        <button onClick={this.handleSearch} disabled={!this.state.searchTerm.trim()} className='search-btn'>
-          <img src={SearchIcon} alt='search icon' />
-          Search
-        </button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className='searchbar'>
+      <input
+        type='search'
+        value={localSearchTerm}
+        onChange={handleInputChange}
+        onInput={handleInput}
+        className='input'
+      />
+      <button onClick={handleSearch} disabled={!localSearchTerm.trim()} className='search-btn'>
+        <img src={SearchIcon} alt='search icon' />
+        Search
+      </button>
+    </div>
+  );
+};
 
 export default SearchBar;

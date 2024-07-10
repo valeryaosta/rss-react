@@ -1,31 +1,22 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import './ButtonWithError.css';
 
-interface Props {}
+const ButtonWithError = () => {
+  const [clicked, setClicked] = useState<boolean>(false);
 
-interface State {
-  clicked: boolean;
-}
-
-class ButtonWithError extends Component<Props, State> {
-  state: State = {
-    clicked: false,
+  const handleClick = () => {
+    setClicked(true);
   };
 
-  handleClick = () => {
-    this.setState({ clicked: true });
-  };
-
-  render() {
-    if (this.state.clicked) {
-      throw new Error('Imitate application error...');
-    }
-    return (
-      <button onClick={this.handleClick} className='btn-error'>
-        Click to receive Error
-      </button>
-    );
+  if (clicked) {
+    throw new Error('Imitate application error...');
   }
-}
+
+  return (
+    <button onClick={handleClick} className='btn-error'>
+      Click to receive Error
+    </button>
+  );
+};
 
 export default ButtonWithError;
