@@ -1,29 +1,18 @@
-import SearchBar from './components/searchbar/SearchBar';
-import CharacterList from './components/characterList/CharacterList';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ErrorBoundary from './components/errorBoundary/ErrorBoundary';
-import ButtonWithError from './components/buttonWithBug/ButtonWithError';
 import FallbackContent from './components/fallbackContent/FallbackContent';
-import useLocalStorage from './hooks/useLocalStorage';
-import './App.css';
+import MainPage from './pages/mainPage/MainPage';
+import NotFoundPage from './pages/notFoundPage/NotFoundPage';
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useLocalStorage('searchTerm', '');
-
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-  };
-
   return (
     <ErrorBoundary fallback={<FallbackContent />}>
-      <div className='app-container'>
-        <div className='searchbar-section'>
-          <ButtonWithError />
-          <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
-        </div>
-        <div className='characters-wrapper'>
-          <CharacterList searchTerm={searchTerm} />
-        </div>
-      </div>
+      <Router>
+        <Routes>
+          <Route path='/' element={<MainPage />} />
+          <Route path='*' element={<NotFoundPage />} />
+        </Routes>
+      </Router>
     </ErrorBoundary>
   );
 };

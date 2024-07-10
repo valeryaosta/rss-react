@@ -21,7 +21,6 @@ class ErrorBoundary extends Component<Props, State> {
       errorInfo: errorInfo,
       error: error,
     });
-    console.error('Uncaught application error:', error, errorInfo.componentStack);
   }
 
   render() {

@@ -8,7 +8,7 @@
   height: calc(100% - 100px);
 }
 
-.fallback-content h1 {
+.fallback-content h2 {
   font-size: 28px;
   color: #437316;
   margin-bottom: 100px;
