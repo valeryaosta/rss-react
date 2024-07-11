@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Spinner from '../spinner/Spinner';
+import Pagination from '../pagination/Pagination';
 import { getCharacters } from '../../api/api';
 import './CharacterList.css';
 
@@ -26,29 +27,32 @@ type Character = {
 
 type Props = {
   searchTerm: string;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
 };
 
-const CharacterList = ({ searchTerm }: Props) => {
+const CharacterList = ({ searchTerm, currentPage, setCurrentPage }: Props) => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   useEffect(() => {
-    fetchCharacters(searchTerm);
-  }, [searchTerm]);
+    const fetchCharacters = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const data = await getCharacters(currentPage, searchTerm);
+        setCharacters(data.results);
+        setTotalPages(data.info.pages);
+      } catch (error) {
+        setError('Failed to fetch characters');
+      }
+      setIsLoading(false);
+    };
 
-  const fetchCharacters = async (searchTerm: string = '') => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await getCharacters(1, searchTerm);
-      setCharacters(data.results);
-      setIsLoading(false);
-    } catch (error) {
-      setError('Failed to fetch characters');
-      setIsLoading(false);
-    }
-  };
+    fetchCharacters();
+  }, [currentPage, searchTerm]);
 
   const getStatusColor = (status: string): string => {
     switch (status.toLowerCase()) {
@@ -70,27 +74,30 @@ const CharacterList = ({ searchTerm }: Props) => {
   }
 
   return (
-    <div className='character-list'>
-      {characters.map((character) => (
-        <div key={character.id} className='character-card'>
-          <img src={character.image} alt={character.name} />
-          <div className='character-info'>
-            <p>{character.name}</p>
-            <div className='status'>
-              <span className='status-indicator' style={{ backgroundColor: getStatusColor(character.status) }}></span>
-              {character.status} - {character.species}
+    <div>
+      <div className='character-list'>
+        {characters.map((character) => (
+          <div key={character.id} className='character-card'>
+            <img src={character.image} alt={character.name} />
+            <div className='character-info'>
+              <p>{character.name}</p>
+              <div className='status'>
+                <span className='status-indicator' style={{ backgroundColor: getStatusColor(character.status) }}></span>
+                {character.status} - {character.species}
+              </div>
+              <p className='specific-text'>
+                <span className='specific'>Last Known Location: </span>
+                {character.location?.name}
+              </p>
+              <p className='specific-text'>
+                <span className='specific'>First Seen In: </span>
+                {character.origin?.name}
+              </p>
             </div>
-            <p className='specific-text'>
-              <span className='specific'>Last Known Location: </span>
-              {character.location?.name}
-            </p>
-            <p className='specific-text'>
-              <span className='specific'>First Seen In: </span>
-              {character.origin?.name}
-            </p>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
     </div>
   );
 };
