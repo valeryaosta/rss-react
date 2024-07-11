@@ -14,6 +14,8 @@ const MainPage = () => {
 
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
+    setCurrentPage(1);
+    setSearchParams({ page: '1' });
   };
 
   const handlePageChange = (page: number) => {
