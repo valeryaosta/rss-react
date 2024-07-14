@@ -59,7 +59,7 @@
 }
 
 .detail-view .character-list {
-  max-height: 500px;
+  max-height: 620px;
   overflow-y: scroll;
   grid-template-columns: repeat(1, minmax(250px, 320px));
   justify-content: end;
@@ -85,6 +85,7 @@
   .app-container.detail-view .character-list {
     padding-right: 5px;
     justify-content: center;
+    max-height: 360px;
   }
 
   .app-container.detail-view .character-detail {

@@ -18,3 +18,16 @@
 .character-info {
   padding-top: 10px;
 }
+
+.episodes {
+  margin-top: 20px;
+}
+
+.episodes ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.episodes li {
+  margin-bottom: 10px;
+}

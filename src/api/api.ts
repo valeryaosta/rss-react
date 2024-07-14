@@ -15,3 +15,13 @@ export const getCharacterDetails = async (id: string) => {
   }
   return response.json();
 };
+
+export const getEpisodes = async (episodes: string[]) => {
+  const episodeIds = episodes.map((ep) => ep.split('/').pop()).join(',');
+  const response = await fetch(`https://rickandmortyapi.com/api/episode/${episodeIds}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch episodes');
+  }
+  const data = await response.json();
+  return Array.isArray(data) ? data : [data];
+};
