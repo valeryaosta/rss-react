@@ -13,6 +13,12 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: #07142f;
+}
+
+.character-card:hover {
+  opacity: 0.4;
 }
 
 .character-card img {
@@ -72,4 +78,8 @@
   .character-list {
     grid-template-columns: minmax(250px, 1fr);
   }
+}
+
+.error {
+  text-align: center;
 }

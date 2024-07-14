@@ -7,3 +7,11 @@ export const getCharacters = async (page: number = 1, name: string = '') => {
   }
   return response.json();
 };
+
+export const getCharacterDetails = async (id: string) => {
+  const response = await fetch(`${API_BASE_URL}/character/${id}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch character details');
+  }
+  return response.json();
+};

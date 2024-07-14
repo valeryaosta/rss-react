@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Spinner from '../spinner/Spinner';
 import Pagination from '../pagination/Pagination';
 import { getCharacters } from '../../api/api';
@@ -65,38 +66,41 @@ const CharacterList = ({ searchTerm, currentPage, setCurrentPage }: Props) => {
     }
   };
 
-  if (isLoading) {
-    return <Spinner />;
-  }
-
   if (error) {
-    return <p>{error || <div>Some error occurred</div>}</p>;
+    return <div className='error'>{<p>error</p> || <p>Some error occurred</p>}</div>;
   }
 
   return (
     <div>
-      <div className='character-list'>
-        {characters.map((character) => (
-          <div key={character.id} className='character-card'>
-            <img src={character.image} alt={character.name} />
-            <div className='character-info'>
-              <p>{character.name}</p>
-              <div className='status'>
-                <span className='status-indicator' style={{ backgroundColor: getStatusColor(character.status) }}></span>
-                {character.status} - {character.species}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className='character-list'>
+          {characters.map((character) => (
+            <Link key={character.id} to={`character/${character.id}`} className='character-card'>
+              <img src={character.image} alt={character.name} />
+              <div className='character-info'>
+                <p>{character.name}</p>
+                <div className='status'>
+                  <span
+                    className='status-indicator'
+                    style={{ backgroundColor: getStatusColor(character.status) }}
+                  ></span>
+                  {character.status} - {character.species}
+                </div>
+                <p className='specific-text'>
+                  <span className='specific'>Last Known Location: </span>
+                  {character.location?.name}
+                </p>
+                <p className='specific-text'>
+                  <span className='specific'>First Seen In: </span>
+                  {character.origin?.name}
+                </p>
               </div>
-              <p className='specific-text'>
-                <span className='specific'>Last Known Location: </span>
-                {character.location?.name}
-              </p>
-              <p className='specific-text'>
-                <span className='specific'>First Seen In: </span>
-                {character.origin?.name}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+            </Link>
+          ))}
+        </div>
+      )}
       <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
     </div>
   );

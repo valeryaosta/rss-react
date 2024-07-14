@@ -38,15 +38,27 @@
   font-weight: 700;
 }
 
+.app-container.detail-view .characters-wrapper .pagination .pagintauin-button-wrapper .pagination-button {
+  padding: 8px 10px;
+}
+.app-container.detail-view .characters-wrapper .pagination {
+  justify-content: end;
+}
+
 @media screen and (max-width: 768px) {
-  .pagination-button {
+  .pagination-button,
+  .app-container.detail-view .characters-wrapper .pagination .pagintauin-button-wrapper .pagination-button {
     padding: 4px 12px;
     margin: 0 1px;
+  }
+  .app-container.detail-view .characters-wrapper .pagination {
+    justify-content: center;
   }
 }
 
 @media screen and (max-width: 500px) {
-  .pagination-button {
+  .pagination-button,
+  .app-container.detail-view .characters-wrapper .pagination .pagintauin-button-wrapper .pagination-button {
     padding: 4px 4px;
   }
 }

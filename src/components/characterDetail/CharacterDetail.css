@@ -1,0 +1,20 @@
+.character-detail {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+.character-detail button {
+  align-self: end;
+}
+
+.character-detail img {
+  max-width: 325px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.character-info {
+  padding-top: 10px;
+}
