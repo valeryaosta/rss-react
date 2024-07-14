@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Spinner from '../spinner/Spinner';
 import Pagination from '../pagination/Pagination';
 import { getCharacters } from '../../api/api';
@@ -37,6 +37,7 @@ const CharacterList = ({ searchTerm, currentPage, setCurrentPage }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchCharacters = async () => {
@@ -77,7 +78,11 @@ const CharacterList = ({ searchTerm, currentPage, setCurrentPage }: Props) => {
       ) : (
         <div className='character-list'>
           {characters.map((character) => (
-            <Link key={character.id} to={`character/${character.id}`} className='character-card'>
+            <Link
+              key={character.id}
+              to={`character/${character.id}?page=${searchParams.get('page') || '1'}`}
+              className='character-card'
+            >
               <img src={character.image} alt={character.name} />
               <div className='character-info'>
                 <p>{character.name}</p>
