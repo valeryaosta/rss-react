@@ -49,5 +49,5 @@
       }
     }
   ],
-  "ignorePatterns": ["vite.config.ts", "dist", ".eslintrc.cjs"]
+  "ignorePatterns": ["vite.config.ts", "dist", ".eslintrc.cjs", "jest.config.cjs", "__mocks__/*"]
 }
