@@ -1,38 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useAppSelector } from '../../hooks/reduxHooks';
 import Spinner from '../spinner/Spinner';
 import Pagination from '../pagination/Pagination';
-import CharacterCard, { Character } from '../characterCard/CharacterCard';
-import { getCharacters } from '../../api/api';
+import CharacterCard from '../characterCard/CharacterCard';
+import { useGetCharactersQuery } from '../../store/api';
+import { CharacterDetailType } from '../../store/types';
 import './CharacterList.css';
 
 type Props = {
-  searchTerm: string;
-  currentPage: number;
   setCurrentPage: (page: number) => void;
 };
 
-const CharacterList = ({ searchTerm, currentPage, setCurrentPage }: Props) => {
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState<number>(0);
+const CharacterList = ({ setCurrentPage }: Props) => {
+  const currentPage = useAppSelector((state) => state.characters.currentPage);
+  const searchTerm = useAppSelector((state) => state.characters.searchTerm);
 
-  useEffect(() => {
-    const fetchCharacters = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const data = await getCharacters(currentPage, searchTerm);
-        setCharacters(data.results);
-        setTotalPages(data.info.pages);
-      } catch (error) {
-        setError('Failed to fetch characters');
-      }
-      setIsLoading(false);
-    };
-
-    fetchCharacters();
-  }, [currentPage, searchTerm]);
+  const { data, error, isLoading } = useGetCharactersQuery({ page: currentPage, name: searchTerm });
 
   const getStatusColor = (status: string): string => {
     switch (status.toLowerCase()) {
@@ -46,7 +29,7 @@ const CharacterList = ({ searchTerm, currentPage, setCurrentPage }: Props) => {
   };
 
   if (error) {
-    return <div className='error'>{<p>error</p> || <p>Some error occurred</p>}</div>;
+    return <div className='error'>{<p>{error.toString()}</p> || <p>Some error occurred</p>}</div>;
   }
 
   return (
@@ -55,12 +38,12 @@ const CharacterList = ({ searchTerm, currentPage, setCurrentPage }: Props) => {
         <Spinner />
       ) : (
         <div className='character-list'>
-          {characters.map((character) => (
+          {data?.results.map((character: CharacterDetailType) => (
             <CharacterCard key={character.id} character={character} getStatusColor={getStatusColor} />
           ))}
         </div>
       )}
-      <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
+      {data && <Pagination currentPage={+currentPage} setCurrentPage={setCurrentPage} totalPages={data.info.pages} />}
     </div>
   );
 };

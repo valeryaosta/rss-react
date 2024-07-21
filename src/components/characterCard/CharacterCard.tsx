@@ -1,29 +1,9 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-
-export type Character = {
-  id: number;
-  name: string;
-  status: string;
-  species: string;
-  type: string;
-  gender: string;
-  origin: {
-    name: string;
-    url: string;
-  };
-  location: {
-    name: string;
-    url: string;
-  };
-  image: string;
-  episode: string[];
-  url: string;
-  created: string;
-};
+import { CharacterDetailType } from '../../store/types';
 
 type Props = {
-  character: Character;
+  character: CharacterDetailType;
   getStatusColor: (status: string) => string;
 };
 

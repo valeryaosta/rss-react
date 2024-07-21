@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useAppSelector } from '../../hooks/reduxHooks.ts';
+
 import SearchIcon from '../../assets/search.svg';
 import './Searchbar.css';
 
 type Props = {
-  searchTerm: string;
   onSearch: (searchTerm: string) => void;
 };
 
-const SearchBar = ({ searchTerm, onSearch }: Props) => {
+const SearchBar = ({ onSearch }: Props) => {
+  const searchTerm = useAppSelector((state) => state.characters.searchTerm);
   const [localSearchTerm, setLocalSearchTerm] = useState<string>(searchTerm);
 
   useEffect(() => {
