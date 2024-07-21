@@ -14,6 +14,9 @@ export const api = createApi({
     }),
     getEpisodes: builder.query({
       query: (episodes: string[]) => {
+        if (!episodes.length) {
+          return '';
+        }
         const episodeIds = episodes.map((ep: string) => ep.split('/').pop()).join(',');
         return `episode/${episodeIds}`;
       },
