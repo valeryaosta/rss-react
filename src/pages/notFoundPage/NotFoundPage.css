@@ -1,0 +1,14 @@
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.not-found h1 {
+  text-align: center;
+  color: #437316;
+}
+
+.fallback-content h2 {
+  margin-bottom: 20px;
+}
