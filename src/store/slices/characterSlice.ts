@@ -34,13 +34,13 @@ const characterSlice = createSlice({
     removeItem(state, action: PayloadAction<string>) {
       state.selectedItems = state.selectedItems.filter((item) => item.id !== action.payload);
     },
-    clearSelectedItems(state) {
+    unselectAll(state) {
       state.selectedItems = [];
     },
   },
 });
 
-export const { setCurrentPage, setSearchTerm, setSelectedCharacter, addItem, removeItem, clearSelectedItems } =
+export const { setCurrentPage, setSearchTerm, setSelectedCharacter, addItem, removeItem, unselectAll } =
   characterSlice.actions;
 
 export default characterSlice.reducer;

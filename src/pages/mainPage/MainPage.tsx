@@ -4,6 +4,7 @@ import { Outlet, useSearchParams, useLocation } from 'react-router-dom';
 import SearchBar from '../../components/searchbar/SearchBar';
 import CharacterList from '../../components/characterList/CharacterList';
 import ButtonWithError from '../../components/buttonWithBug/ButtonWithError';
+import Flyout from '../../components/flyout/Flyout';
 import { setCurrentPage, setSearchTerm } from '../../store/slices/characterSlice';
 import './MainPage.css';
 
@@ -40,6 +41,7 @@ const MainPage = () => {
         <CharacterList setCurrentPage={handlePageChange} />
         <Outlet />
       </div>
+      <Flyout />
     </div>
   );
 };
