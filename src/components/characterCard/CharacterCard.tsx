@@ -1,5 +1,7 @@
 import React from 'react';
+import { useAppDispatch } from '../../hooks/reduxHooks';
 import { Link, useSearchParams } from 'react-router-dom';
+import { setSelectedCharacter } from '../../store/slices/characterSlice';
 import { CharacterDetailType } from '../../store/types';
 
 type Props = {
@@ -8,6 +10,8 @@ type Props = {
 };
 
 const CharacterCard = ({ character, getStatusColor }: Props) => {
+  const dispatch = useAppDispatch();
+
   const [searchParams] = useSearchParams();
 
   return (
@@ -15,6 +19,7 @@ const CharacterCard = ({ character, getStatusColor }: Props) => {
       key={character.id}
       to={`character/${character.id}?page=${searchParams.get('page') || '1'}`}
       className='character-card'
+      onClick={() => dispatch(setSelectedCharacter(character))}
     >
       <img src={character.image} alt={character.name} />
       <div className='character-info'>

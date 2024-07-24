@@ -5,12 +5,14 @@ type CharacterState = {
   currentPage: number;
   searchTerm: string;
   selectedCharacter: CharacterDetailType | null;
+  selectedItems: CharacterDetailType[];
 };
 
 const initialState: CharacterState = {
   currentPage: 1,
   searchTerm: '',
   selectedCharacter: null,
+  selectedItems: [],
 };
 
 const characterSlice = createSlice({
@@ -26,9 +28,19 @@ const characterSlice = createSlice({
     setSelectedCharacter(state, action: PayloadAction<CharacterDetailType>) {
       state.selectedCharacter = action.payload;
     },
+    addItem(state, action: PayloadAction<CharacterDetailType>) {
+      state.selectedItems.push(action.payload);
+    },
+    removeItem(state, action: PayloadAction<string>) {
+      state.selectedItems = state.selectedItems.filter((item) => item.id !== action.payload);
+    },
+    clearSelectedItems(state) {
+      state.selectedItems = [];
+    },
   },
 });
 
-export const { setCurrentPage, setSearchTerm, setSelectedCharacter } = characterSlice.actions;
+export const { setCurrentPage, setSearchTerm, setSelectedCharacter, addItem, removeItem, clearSelectedItems } =
+  characterSlice.actions;
 
 export default characterSlice.reducer;
