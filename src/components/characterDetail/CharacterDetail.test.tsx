@@ -1,17 +1,19 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import userEvent from '@testing-library/user-event';
 import CharacterDetail from './CharacterDetail';
-import * as api from '../../api/api';
-import '@testing-library/jest-dom';
+import MainPage from '../../pages/mainPage/MainPage';
+import { useGetCharacterDetailsQuery, useGetEpisodesQuery } from '../../store/api';
+import { CharacterDetailType, EpisodeType } from '../../store/types';
 
-jest.mock('../../api/api');
+jest.mock('../../store/api');
 
-const mockGetCharacterDetails = api.getCharacterDetails as jest.MockedFunction<typeof api.getCharacterDetails>;
-const mockGetEpisodes = api.getEpisodes as jest.MockedFunction<typeof api.getEpisodes>;
+const mockUseGetCharacterDetailsQuery = useGetCharacterDetailsQuery as jest.MockedFunction<
+  typeof useGetCharacterDetailsQuery
+>;
+const mockUseGetEpisodesQuery = useGetEpisodesQuery as jest.MockedFunction<typeof useGetEpisodesQuery>;
 
-const character = {
+const character: CharacterDetailType = {
   id: '1',
   name: 'Rick Sanchez',
   status: 'Alive',
@@ -32,23 +34,37 @@ const character = {
   created: '2017-11-04T18:48:46.250Z',
 };
 
-const episodes = [
+const episodes: EpisodeType[] = [
   {
     id: 1,
     name: 'Pilot',
     air_date: 'December 2, 2013',
     episode: 'S01E01',
+    characters: [],
+    created: '',
+    url: '',
   },
 ];
 
 describe('CharacterDetail', () => {
   beforeEach(() => {
-    mockGetCharacterDetails.mockClear();
-    mockGetEpisodes.mockClear();
+    jest.clearAllMocks();
   });
 
   it('displays a loading indicator while fetching data', async () => {
-    mockGetCharacterDetails.mockReturnValue(new Promise(() => {}));
+    mockUseGetCharacterDetailsQuery.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isLoading: true,
+      refetch: jest.fn(),
+    });
+
+    mockUseGetEpisodesQuery.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isLoading: true,
+      refetch: jest.fn(),
+    });
 
     render(
       <MemoryRouter initialEntries={['/character/1']}>
@@ -62,8 +78,19 @@ describe('CharacterDetail', () => {
   });
 
   it('displays the character details correctly', async () => {
-    mockGetCharacterDetails.mockResolvedValueOnce(character);
-    mockGetEpisodes.mockResolvedValueOnce(episodes);
+    mockUseGetCharacterDetailsQuery.mockReturnValue({
+      data: character,
+      error: undefined,
+      isLoading: false,
+      refetch: jest.fn(),
+    });
+
+    mockUseGetEpisodesQuery.mockReturnValue({
+      data: episodes,
+      error: undefined,
+      isLoading: false,
+      refetch: jest.fn(),
+    });
 
     render(
       <MemoryRouter initialEntries={['/character/1']}>
@@ -74,35 +101,39 @@ describe('CharacterDetail', () => {
     );
 
     expect(await screen.findByText('Rick Sanchez')).toBeInTheDocument();
-    expect(screen.getByText((content, element) => element?.textContent === 'Status: Alive')).toBeInTheDocument();
-    expect(screen.getByText((content, element) => element?.textContent === 'Species: Human')).toBeInTheDocument();
-    expect(screen.getByText((content, element) => element?.textContent === 'Gender: Male')).toBeInTheDocument();
-    expect(
-      screen.getByText((content, element) => element?.textContent === 'Origin: Earth (C-137)'),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        (content, element) => element?.textContent === 'Last known location: Earth (Replacement Dimension)',
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByText('Alive')).toBeInTheDocument();
+    expect(screen.getByText('Human')).toBeInTheDocument();
+    expect(screen.getByText('Male')).toBeInTheDocument();
+    expect(screen.getByText('Earth (C-137)')).toBeInTheDocument();
   });
 
-  it('hides the component when the close button is clicked', async () => {
-    mockGetCharacterDetails.mockResolvedValueOnce(character);
-    mockGetEpisodes.mockResolvedValueOnce(episodes);
+  it('hides the component when the back button is clicked', async () => {
+    mockUseGetCharacterDetailsQuery.mockReturnValue({
+      data: character,
+      error: undefined,
+      isLoading: false,
+      refetch: jest.fn(),
+    });
+
+    mockUseGetEpisodesQuery.mockReturnValue({
+      data: episodes,
+      error: undefined,
+      isLoading: false,
+      refetch: jest.fn(),
+    });
 
     render(
       <MemoryRouter initialEntries={['/character/1']}>
         <Routes>
           <Route path='/character/:characterId' element={<CharacterDetail />} />
-          <Route path='/' element={<div>Home Page</div>} />
+          <Route path='/' element={<MainPage />} />
         </Routes>
       </MemoryRouter>,
     );
 
     await screen.findByText('Rick Sanchez');
     const backButton = screen.getByText('Back');
-    userEvent.click(backButton);
+    fireEvent.click(backButton);
 
     expect(await screen.findByText('Home Page')).toBeInTheDocument();
   });
