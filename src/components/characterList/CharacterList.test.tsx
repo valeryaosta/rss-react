@@ -7,6 +7,7 @@ import CharacterList from './CharacterList';
 import characterReducer from '../../store/slices/characterSlice';
 import { useGetCharactersQuery } from '../../store/api';
 import { CharacterDetailType } from '../../store/types';
+import { addItem } from '../../store/slices/characterSlice';
 
 jest.mock('../../store/api');
 
@@ -38,7 +39,6 @@ const characters: CharacterDetailType[] = [
 const store = configureStore({
   reducer: {
     characters: characterReducer,
-    // Add other reducers here if needed
   },
 });
 
@@ -104,5 +104,27 @@ describe('CharacterList', () => {
     );
 
     expect(await screen.findByText(/Failed to fetch characters/)).toBeInTheDocument();
+  });
+
+  it('displays selected character with checked checkbox', async () => {
+    store.dispatch(addItem(characters[0]));
+
+    mockUseGetCharactersQuery.mockReturnValue({
+      data: { results: characters, info: { pages: 1 } },
+      error: undefined,
+      isLoading: false,
+      refetch: jest.fn(),
+    } as unknown as ReturnType<typeof useGetCharactersQuery>);
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterList setCurrentPage={mockSetCurrentPage} />
+        </MemoryRouter>
+      </Provider>,
+    );
+
+    const checkbox = await screen.findByRole('checkbox');
+    expect(checkbox).toBeChecked();
   });
 });
