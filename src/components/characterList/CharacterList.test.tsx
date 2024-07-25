@@ -1,16 +1,20 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import CharacterList from './CharacterList';
-import * as api from '../../api/api';
+import characterReducer from '../../store/slices/characterSlice';
+import { useGetCharactersQuery } from '../../store/api';
+import { CharacterDetailType } from '../../store/types';
 
-jest.mock('../../api/api');
+jest.mock('../../store/api');
 
-const mockGetCharacters = api.getCharacters as jest.MockedFunction<typeof api.getCharacters>;
+const mockUseGetCharactersQuery = useGetCharactersQuery as jest.MockedFunction<typeof useGetCharactersQuery>;
 
-const characters = [
+const characters: CharacterDetailType[] = [
   {
-    id: 1,
+    id: '1',
     name: 'Rick Sanchez',
     status: 'Alive',
     species: 'Human',
@@ -31,52 +35,74 @@ const characters = [
   },
 ];
 
+const store = configureStore({
+  reducer: {
+    characters: characterReducer,
+    // Add other reducers here if needed
+  },
+});
+
 describe('CharacterList', () => {
   const mockSetCurrentPage = jest.fn();
 
   beforeEach(() => {
-    mockSetCurrentPage.mockClear();
-    mockGetCharacters.mockClear();
+    jest.clearAllMocks();
   });
 
   it('renders a list of characters', async () => {
-    mockGetCharacters.mockResolvedValueOnce({
-      results: characters,
-      info: {
-        pages: 1,
-      },
-    });
+    mockUseGetCharactersQuery.mockReturnValue({
+      data: { results: characters, info: { pages: 1 } },
+      error: undefined,
+      isLoading: false,
+      refetch: jest.fn(),
+    } as unknown as ReturnType<typeof useGetCharactersQuery>);
 
     render(
-      <MemoryRouter>
-        <CharacterList searchTerm='' currentPage={1} setCurrentPage={mockSetCurrentPage} />
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterList setCurrentPage={mockSetCurrentPage} />
+        </MemoryRouter>
+      </Provider>,
     );
 
     expect(await screen.findByText('Rick Sanchez')).toBeInTheDocument();
   });
 
   it('displays loading spinner while fetching data', () => {
-    mockGetCharacters.mockReturnValue(new Promise(() => {}));
+    mockUseGetCharactersQuery.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isLoading: true,
+      refetch: jest.fn(),
+    } as unknown as ReturnType<typeof useGetCharactersQuery>);
 
     render(
-      <MemoryRouter>
-        <CharacterList searchTerm='' currentPage={1} setCurrentPage={mockSetCurrentPage} />
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterList setCurrentPage={mockSetCurrentPage} />
+        </MemoryRouter>
+      </Provider>,
     );
 
     expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
   it('displays error message when fetching data fails', async () => {
-    mockGetCharacters.mockRejectedValueOnce(new Error('Failed to fetch characters'));
+    mockUseGetCharactersQuery.mockReturnValue({
+      data: undefined,
+      error: new Error('Failed to fetch characters'),
+      isLoading: false,
+      refetch: jest.fn(),
+    } as unknown as ReturnType<typeof useGetCharactersQuery>);
 
     render(
-      <MemoryRouter>
-        <CharacterList searchTerm='' currentPage={1} setCurrentPage={mockSetCurrentPage} />
-      </MemoryRouter>,
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterList setCurrentPage={mockSetCurrentPage} />
+        </MemoryRouter>
+      </Provider>,
     );
 
-    expect(await screen.findByText('error')).toBeInTheDocument();
+    expect(await screen.findByText(/Failed to fetch characters/)).toBeInTheDocument();
   });
 });
