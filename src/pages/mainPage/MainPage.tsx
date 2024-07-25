@@ -5,6 +5,7 @@ import SearchBar from '../../components/searchbar/SearchBar';
 import CharacterList from '../../components/characterList/CharacterList';
 import ButtonWithError from '../../components/buttonWithBug/ButtonWithError';
 import Flyout from '../../components/flyout/Flyout';
+import useLocalStorage from '../../hooks/useLocalStorage.ts';
 import { setCurrentPage, setSearchTerm } from '../../store/slices/characterSlice';
 import './MainPage.css';
 
@@ -12,16 +13,19 @@ const MainPage = () => {
   const dispatch = useAppDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
+  const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage('searchTerm', '');
 
   useEffect(() => {
     const initialPage = Number(searchParams.get('page')) || 1;
     dispatch(setCurrentPage(initialPage));
-  }, [searchParams, dispatch]);
+    dispatch(setSearchTerm(storedSearchTerm));
+  }, [searchParams, storedSearchTerm, dispatch]);
 
   const handleSearch = (searchTerm: string) => {
     dispatch(setSearchTerm(searchTerm));
     dispatch(setCurrentPage(1));
     setSearchParams({ page: '1' });
+    setStoredSearchTerm(searchTerm);
   };
 
   const handlePageChange = (page: number) => {
