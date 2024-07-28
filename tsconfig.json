@@ -9,6 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
+    "noEmit": true,
     "allowUmdGlobalAccess": true
   },
   "include": ["src/**/*"]
