@@ -3,7 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { api } from './api';
 import characterReducer from './slices/characterSlice';
 
-export const store = configureStore({
+const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     characters: characterReducer,
@@ -12,6 +12,8 @@ export const store = configureStore({
 });
 
 setupListeners(store.dispatch);
+
+export default store;
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
