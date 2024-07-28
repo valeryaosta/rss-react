@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CharacterDetailType } from '../types.ts';
+import { CharacterDetailType } from '../types';
 
 type CharacterState = {
   currentPage: number;

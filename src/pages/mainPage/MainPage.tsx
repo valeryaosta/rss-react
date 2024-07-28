@@ -5,7 +5,7 @@ import SearchBar from '../../components/searchbar/SearchBar';
 import CharacterList from '../../components/characterList/CharacterList';
 import ButtonWithError from '../../components/buttonWithBug/ButtonWithError';
 import Flyout from '../../components/flyout/Flyout';
-import useLocalStorage from '../../hooks/useLocalStorage.ts';
+import useLocalStorage from '../../hooks/useLocalStorage';
 import { setCurrentPage, setSearchTerm } from '../../store/slices/characterSlice';
 import './MainPage.css';
 

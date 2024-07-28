@@ -1,4 +1,4 @@
-import FallbackContent from '../../components/fallbackContent/FallbackContent.tsx';
+import FallbackContent from '../../components/fallbackContent/FallbackContent';
 import './NotFoundPage.css';
 
 const NotFoundPage = () => {

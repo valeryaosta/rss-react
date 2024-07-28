@@ -4,7 +4,7 @@ import FallbackContent from './components/fallbackContent/FallbackContent';
 import MainPage from './pages/mainPage/MainPage';
 import NotFoundPage from './pages/notFoundPage/NotFoundPage';
 import CharacterDetail from './components/characterDetail/CharacterDetail';
-import { useTheme } from './contexts/ThemeContext.tsx';
+import { useTheme } from './contexts/ThemeContext';
 import Light from '../src/assets/ligth-mode.png';
 import Dark from '../src/assets/dark-mode.png';
 import './App.css';

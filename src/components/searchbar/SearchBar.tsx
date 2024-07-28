@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAppSelector } from '../../hooks/reduxHooks.ts';
+import { useAppSelector } from '../../hooks/reduxHooks';
 
 import SearchIcon from '../../assets/search.svg';
 import './Searchbar.css';
