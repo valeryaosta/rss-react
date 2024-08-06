@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useAppSelector } from '../../hooks/reduxHooks';
-
-import SearchIcon from '../../assets/search.svg';
-import './Searchbar.css';
+import { useAppSelector } from '@/hooks/reduxHooks';
+import Image from 'next/image';
+import SearchIcon from '../../../public/search.svg';
+import styles from './Searchbar.module.css';
 
 type Props = {
   onSearch: (searchTerm: string) => void;
@@ -32,17 +32,17 @@ const SearchBar = ({ onSearch }: Props) => {
   };
 
   return (
-    <div className='searchbar'>
+    <div className={styles['searchbar']}>
       <input
         type='search'
         value={localSearchTerm}
         onChange={handleInputChange}
         onInput={handleInput}
-        className='input'
+        className={styles['input']}
         placeholder='Type character name...'
       />
-      <button onClick={handleSearch} disabled={!localSearchTerm.trim()} className='search-btn'>
-        <img src={SearchIcon} alt='search icon' />
+      <button onClick={handleSearch} disabled={!localSearchTerm.trim()} className={styles['search-btn']}>
+        <Image src={SearchIcon} alt='search icon' className={styles['input-image']} />
         Search
       </button>
     </div>

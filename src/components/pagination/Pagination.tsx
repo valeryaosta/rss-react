@@ -1,4 +1,4 @@
-import './Pagination.css';
+import styles from './Pagination.module.css';
 
 type Props = {
   currentPage: number;
@@ -29,7 +29,7 @@ const Pagination = ({ currentPage, setCurrentPage, totalPages }: Props) => {
       pageNumbers.push(
         <button
           key={i}
-          className={`pagination-button ${i === currentPage ? 'active' : ''}`}
+          className={`${styles['pagination-button']} ${i === currentPage ? styles['active'] : ''}`}
           onClick={() => handlePageChange(i)}
         >
           {i}
@@ -40,10 +40,10 @@ const Pagination = ({ currentPage, setCurrentPage, totalPages }: Props) => {
   };
 
   return (
-    <div className='pagination'>
-      <div className='pagintauin-button-wrapper'>
+    <div className={styles['pagination']}>
+      <div className={styles['pagintauin-button-wrapper']}>
         <button
-          className='pagination-button'
+          className={styles['pagination-button']}
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -51,14 +51,14 @@ const Pagination = ({ currentPage, setCurrentPage, totalPages }: Props) => {
         </button>
         {renderPageNumbers()}
         <button
-          className='pagination-button'
+          className={styles['pagination-button']}
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
           &gt;
         </button>
       </div>
-      <span className='pagination-info'>
+      <span className={styles['pagination-info']}>
         {currentPage} of {totalPages} pages
       </span>
     </div>

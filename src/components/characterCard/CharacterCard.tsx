@@ -1,8 +1,10 @@
 import React from 'react';
-import { useAppDispatch } from '../../hooks/reduxHooks';
-import { Link, useSearchParams } from 'react-router-dom';
-import { setSelectedCharacter } from '../../store/slices/characterSlice';
-import { CharacterDetailType } from '../../store/types';
+import { useAppDispatch } from '@/hooks/reduxHooks';
+import { useRouter } from 'next/router';
+import { setSelectedCharacter } from '@/store/slices/characterSlice';
+import { CharacterDetailType } from '@/store/types';
+import Image from 'next/image';
+import styles from '../characterList/CharacterList.module.css';
 
 type Props = {
   character: CharacterDetailType;
@@ -11,33 +13,41 @@ type Props = {
 
 const CharacterCard = ({ character, getStatusColor }: Props) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
-  const [searchParams] = useSearchParams();
+  const handleClick = () => {
+    dispatch(setSelectedCharacter(character));
+    router.push(`/character/${character.id}?page=${router.query.page || '1'}`);
+  };
 
   return (
-    <Link
-      key={character.id}
-      to={`character/${character.id}?page=${searchParams.get('page') || '1'}`}
-      className='character-card'
-      onClick={() => dispatch(setSelectedCharacter(character))}
-    >
-      <img src={character.image} alt={character.name} />
-      <div className='character-info'>
+    <div key={character.id} className={styles['character-card']} onClick={handleClick} role='link'>
+      <Image
+        src={character.image}
+        alt={character.name}
+        className={styles['character-card-image']}
+        width={100}
+        height={320}
+      />
+      <div className={styles['character-info']}>
         <p>{character.name}</p>
-        <div className='status'>
-          <span className='status-indicator' style={{ backgroundColor: getStatusColor(character.status) }}></span>
+        <div className={styles['status']}>
+          <span
+            className={styles['status-indicator']}
+            style={{ backgroundColor: getStatusColor(character.status) }}
+          ></span>
           {character.status} - {character.species}
         </div>
-        <p className='specific-text'>
-          <span className='specific'>Last Known Location: </span>
+        <p className={styles['specific-text']}>
+          <span className={styles['specific']}>Last Known Location: </span>
           {character.location?.name}
         </p>
-        <p className='specific-text'>
-          <span className='specific'>First Seen In: </span>
+        <p className={styles['specific-text']}>
+          <span className={styles['specific']}>First Seen In: </span>
           {character.origin?.name}
         </p>
       </div>
-    </Link>
+    </div>
   );
 };
 

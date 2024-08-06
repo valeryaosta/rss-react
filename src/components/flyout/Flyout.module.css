@@ -1,8 +1,8 @@
 .flyout {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  bottom: 5px;
+  left: 5px;
+  width: fit-content;
   background: rgb(63 123 215);
   color: #fff;
   padding: 10px;
@@ -12,6 +12,7 @@
   gap: 20px;
   align-items: center;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
   z-index: 10;
   transition: background-color 1s ease;
 }
@@ -31,7 +32,7 @@
 }
 
 .flyout button:hover {
-  background: #f0f0f0;
+  opacity: 0.6;
 }
 
 @media (max-width: 400px) {

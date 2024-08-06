@@ -1,7 +1,7 @@
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { unselectAll } from '../../store/slices/characterSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
+import { unselectAll } from '@/store/slices/characterSlice';
 import { saveAs } from 'file-saver';
-import './Flyout.css';
+import styles from './Flyout.module.css';
 
 const Flyout = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +28,7 @@ const Flyout = () => {
   }
 
   return (
-    <div className='flyout'>
+    <div className={styles['flyout']}>
       <p>{selectedItems.length} item(s) selected</p>
       <button onClick={handleUnselectAll}>Unselect all</button>
       <button onClick={handleDownload}>Download</button>

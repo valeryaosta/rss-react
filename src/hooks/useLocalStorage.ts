@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 
 function useLocalStorage(key: string, initialValue: string) {
-  const [value, setValue] = useState(() => {
-    return window.localStorage.getItem(key) || initialValue;
+  const [value, setValue] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return window.localStorage.getItem(key) || initialValue;
+    } else {
+      return initialValue;
+    }
   });
 
   useEffect(() => {
-    window.localStorage.setItem(key, value);
-  }, [key, value]);
-
-  useEffect(() => {
-    return () => {
+    if (typeof window !== 'undefined') {
       window.localStorage.setItem(key, value);
-    };
+    }
   }, [key, value]);
 
   return [value, setValue] as const;

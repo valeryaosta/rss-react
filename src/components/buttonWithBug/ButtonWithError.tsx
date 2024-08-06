@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './ButtonWithError.css';
+import styles from './ButtonWithError.module.css';
 
 const ButtonWithError = () => {
   const [clicked, setClicked] = useState<boolean>(false);
@@ -13,7 +13,7 @@ const ButtonWithError = () => {
   }
 
   return (
-    <button onClick={handleClick} className='btn-error'>
+    <button onClick={handleClick} className={styles['btn-error']}>
       Click to receive Error
     </button>
   );

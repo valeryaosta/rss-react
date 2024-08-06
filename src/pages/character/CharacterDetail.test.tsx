@@ -4,8 +4,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import characterReducer from '../../store/slices/characterSlice';
-import { useGetCharactersQuery } from '../../store/api';
-import CharacterList from '../characterList/CharacterList';
+import { useGetCharactersQuery } from '@/store/api';
+import CharacterList from '../../components/characterList/CharacterList';
 
 jest.mock('../../store/api');
 

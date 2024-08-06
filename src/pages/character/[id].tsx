@@ -1,14 +1,14 @@
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import Spinner from '../spinner/Spinner';
-import { useGetCharacterDetailsQuery, useGetEpisodesQuery } from '../../store/api';
-import { EpisodeType } from '../../store/types';
-import './CharacterDetail.css';
+import { useRouter } from 'next/router';
+import Spinner from '../../components/spinner/Spinner';
+import { useGetCharacterDetailsQuery, useGetEpisodesQuery } from '@/store/api';
+import { EpisodeType } from '@/store/types';
+import Image from 'next/image';
+import styles from './CharacterDetail.module.css';
 
 const CharacterDetail = () => {
-  const { characterId } = useParams<{ characterId: string }>();
-  const [searchParams] = useSearchParams();
-  const currentPage = searchParams.get('page') || '1';
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { id: characterId } = router.query;
+  const currentPage = router.query.page || '1';
 
   const {
     data: character,
@@ -31,10 +31,16 @@ const CharacterDetail = () => {
   }
 
   return (
-    <div className='character-detail'>
-      <button onClick={() => navigate(`/?page=${currentPage}`)}>Back</button>
-      <img src={character.image} alt={character.name} />
-      <div className='character-info'>
+    <div className={styles['character-detail']}>
+      <button onClick={() => router.push(`/?page=${currentPage}`)}>Back</button>
+      <Image
+        src={character.image}
+        alt={character.name}
+        className={styles['character-detail-image']}
+        width={100}
+        height={320}
+      />
+      <div className={styles['character-info']}>
         <h1>{character.name}</h1>
         <p>
           <strong>Status: </strong>
@@ -56,7 +62,7 @@ const CharacterDetail = () => {
           <strong>Last known location: </strong>
           {character.location.name}
         </p>
-        <div className='episodes'>
+        <div className={styles['episodes']}>
           <h2>Episodes:</h2>
           {episodes && episodes.length > 0 ? (
             <ul>

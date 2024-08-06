@@ -26,9 +26,10 @@
 
 .character-card:hover {
   opacity: 0.5;
+  cursor: pointer;
 }
 
-.character-card img {
+.character-card-image {
   width: 100%;
   max-height: 300px;
   object-fit: cover;

@@ -4,7 +4,8 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "next/core-web-vitals"
   ],
   "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier", "react-compiler"],
   "parser": "@typescript-eslint/parser",
@@ -13,8 +14,7 @@
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module",
-    "project": ["./tsconfig.json", "./tsconfig.app.json", "./tsconfig.node.json"]
+    "sourceType": "module"
   },
   "env": {
     "browser": true,
@@ -49,5 +49,5 @@
       }
     }
   ],
-  "ignorePatterns": ["vite.config.ts", "dist", ".eslintrc.cjs", "jest.config.cjs", "__mocks__/*"]
+  "ignorePatterns": ["dist", ".eslintrc.json", "jest.config.cjs", "__mocks__/*"]
 }

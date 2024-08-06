@@ -6,7 +6,7 @@
 
 .searchbar-section {
   position: relative;
-  background-image: url('/public/main-bg.webp');
+  background-image: url('../../public/main-bg.webp');
   background-size: cover;
   background-position: 50% 30%;
   width: 100%;

@@ -1,12 +1,12 @@
 import React from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import Spinner from '../spinner/Spinner';
 import Pagination from '../pagination/Pagination';
 import CharacterCard from '../characterCard/CharacterCard';
-import { useGetCharactersQuery } from '../../store/api';
-import { addItem, removeItem } from '../../store/slices/characterSlice';
-import { CharacterDetailType } from '../../store/types';
-import './CharacterList.css';
+import { useGetCharactersQuery } from '@/store/api';
+import { addItem, removeItem } from '@/store/slices/characterSlice';
+import { CharacterDetailType } from '@/store/types';
+import styles from './CharacterList.module.css';
 
 type Props = {
   setCurrentPage: (page: number) => void;
@@ -50,16 +50,16 @@ const CharacterList = ({ setCurrentPage }: Props) => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <div className='character-list'>
+        <div className={styles['character-list']}>
           {data?.results.map((character: CharacterDetailType) => (
-            <div className='character-container' key={character.id}>
+            <div className={styles['character-container']} key={character.id}>
               <input
                 type='checkbox'
                 checked={selectedItems.some((item) => item.id === character.id)}
                 onChange={() => {
                   handleSelectItem(character);
                 }}
-                className='character-checkbox'
+                className={styles['character-checkbox']}
               />
               <CharacterCard character={character} getStatusColor={getStatusColor} />
             </div>

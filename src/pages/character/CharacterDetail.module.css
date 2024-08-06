@@ -9,7 +9,7 @@
   align-self: end;
 }
 
-.character-detail img {
+.character-detail-image {
   max-width: 325px;
   height: auto;
   border-radius: 10px;

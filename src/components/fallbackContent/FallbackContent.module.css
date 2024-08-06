@@ -14,9 +14,10 @@
   margin-bottom: 100px;
 }
 
-.fallback-content img {
+.fallback-content-image {
   width: 100%;
-  max-width: 700px;
+  max-height: 60vh;
   margin-bottom: 20px;
   border-radius: 5px;
+  object-fit: contain;
 }
