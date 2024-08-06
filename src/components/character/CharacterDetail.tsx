@@ -1,20 +1,23 @@
+import React from 'react';
 import { useRouter } from 'next/router';
-import Spinner from '../../components/spinner/Spinner';
+import Spinner from '../spinner/Spinner';
 import { useGetCharacterDetailsQuery, useGetEpisodesQuery } from '@/store/api';
 import { EpisodeType } from '@/store/types';
 import Image from 'next/image';
 import styles from './CharacterDetail.module.css';
 
-const CharacterDetail = () => {
+type CharacterDetailProps = {
+  characterId: string;
+};
+
+const CharacterDetail = ({ characterId }: CharacterDetailProps) => {
   const router = useRouter();
-  const { id: characterId } = router.query;
-  const currentPage = router.query.page || '1';
 
   const {
     data: character,
     error: characterError,
     isLoading: isCharacterLoading,
-  } = useGetCharacterDetailsQuery(characterId as string);
+  } = useGetCharacterDetailsQuery(characterId);
   const episodeUrls = character?.episode || [];
   const { data: episodes, error: episodesError, isLoading: isEpisodesLoading } = useGetEpisodesQuery(episodeUrls);
 
@@ -32,12 +35,14 @@ const CharacterDetail = () => {
 
   return (
     <div className={styles['character-detail']}>
-      <button onClick={() => router.push(`/?page=${currentPage}`)}>Back</button>
+      <button onClick={() => router.push(`/?page=${router.query.page || '1'}&search=${router.query.search || ''}`)}>
+        Back
+      </button>
       <Image
         src={character.image}
         alt={character.name}
         className={styles['character-detail-image']}
-        width={100}
+        width={320}
         height={320}
       />
       <div className={styles['character-info']}>

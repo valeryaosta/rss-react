@@ -17,7 +17,7 @@ const CharacterCard = ({ character, getStatusColor }: Props) => {
 
   const handleClick = () => {
     dispatch(setSelectedCharacter(character));
-    router.push(`/character/${character.id}?page=${router.query.page || '1'}`);
+    router.push(`/?page=${router.query.page || '1'}&search=${router.query.search || ''}&characterId=${character.id}`);
   };
 
   return (

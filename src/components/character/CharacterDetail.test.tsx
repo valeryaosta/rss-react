@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import characterReducer from '../../store/slices/characterSlice';
 import { useGetCharactersQuery } from '@/store/api';
-import CharacterList from '../../components/characterList/CharacterList';
+import CharacterList from '../characterList/CharacterList';
 
 jest.mock('../../store/api');
 
