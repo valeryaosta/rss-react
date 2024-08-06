@@ -64,6 +64,46 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { setCurrentPage, setSearchTerm } from '../store/slices/characterSlice';
 import styles from './index.module.css';
 
+// const MainPage = () => {
+//   const dispatch = useAppDispatch();
+//   const router = useRouter();
+//   const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage('searchTerm', '');
+//
+//   useEffect(() => {
+//     const initialPage = Number(router.query.page) || 1;
+//     dispatch(setCurrentPage(initialPage));
+//     dispatch(setSearchTerm(storedSearchTerm));
+//   }, [router.query.page, storedSearchTerm, dispatch]);
+//
+//   const handleSearch = (searchTerm: string) => {
+//     dispatch(setSearchTerm(searchTerm));
+//     dispatch(setCurrentPage(1));
+//     router.push(`/?page=1&search=${searchTerm}`);
+//     setStoredSearchTerm(searchTerm);
+//   };
+//
+//   const handlePageChange = (page: number) => {
+//     dispatch(setCurrentPage(page));
+//     router.push(`/?page=${page}&search=${router.query.search || ''}&characterId=${router.query.characterId || ''}`);
+//   };
+//
+//   const isDetailPage = router.query.characterId !== undefined;
+//
+//   return (
+//     <div className={`app-container ${isDetailPage ? 'detail-view' : ''}`}>
+//       <div className={styles['searchbar-section']}>
+//         <ButtonWithError />
+//         <SearchBar onSearch={handleSearch} />
+//       </div>
+//       <div className={styles['characters-wrapper']}>
+//         <CharacterList setCurrentPage={handlePageChange} />
+//         {isDetailPage && <CharacterDetail characterId={router.query.characterId as string} />}
+//       </div>
+//       <Flyout />
+//     </div>
+//   );
+// };
+
 const MainPage = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -95,9 +135,15 @@ const MainPage = () => {
         <ButtonWithError />
         <SearchBar onSearch={handleSearch} />
       </div>
-      <div className={styles['characters-wrapper']}>
-        <CharacterList setCurrentPage={handlePageChange} />
-        {isDetailPage && <CharacterDetail characterId={router.query.characterId as string} />}
+      <div className={styles['content-section']}>
+        <div className={styles['characters-wrapper']}>
+          <CharacterList setCurrentPage={handlePageChange} />
+        </div>
+        {isDetailPage && (
+          <div className={styles['character-detail-wrapper']}>
+            <CharacterDetail characterId={router.query.characterId as string} />
+          </div>
+        )}
       </div>
       <Flyout />
     </div>

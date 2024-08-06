@@ -42,8 +42,8 @@ const CharacterDetail = ({ characterId }: CharacterDetailProps) => {
         src={character.image}
         alt={character.name}
         className={styles['character-detail-image']}
-        width={320}
-        height={320}
+        width={250}
+        height={250}
       />
       <div className={styles['character-info']}>
         <h1>{character.name}</h1>
@@ -61,11 +61,11 @@ const CharacterDetail = ({ characterId }: CharacterDetailProps) => {
         </p>
         <p>
           <strong>Origin: </strong>
-          {character.origin.name}
+          {character?.origin?.name || 'not indicated'}
         </p>
         <p>
           <strong>Last known location: </strong>
-          {character.location.name}
+          {character?.location?.name || 'not indicated'}
         </p>
         <div className={styles['episodes']}>
           <h2>Episodes:</h2>

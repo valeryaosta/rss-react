@@ -47,26 +47,27 @@ const CharacterList = ({ setCurrentPage }: Props) => {
 
   return (
     <div>
+      {data && <Pagination currentPage={+currentPage} setCurrentPage={setCurrentPage} totalPages={data.info.pages} />}
       {isLoading ? (
         <Spinner />
       ) : (
         <div className={styles['character-list']}>
-          {data?.results.map((character: CharacterDetailType) => (
-            <div className={styles['character-container']} key={character.id}>
-              <input
-                type='checkbox'
-                checked={selectedItems.some((item) => item.id === character.id)}
-                onChange={() => {
-                  handleSelectItem(character);
-                }}
-                className={styles['character-checkbox']}
-              />
-              <CharacterCard character={character} getStatusColor={getStatusColor} />
-            </div>
-          ))}
+          {data &&
+            data?.results.map((character: CharacterDetailType) => (
+              <div className={styles['character-container']} key={character.id}>
+                <input
+                  type='checkbox'
+                  checked={selectedItems.some((item) => item.id === character.id)}
+                  onChange={() => {
+                    handleSelectItem(character);
+                  }}
+                  className={styles['character-checkbox']}
+                />
+                <CharacterCard character={character} getStatusColor={getStatusColor} />
+              </div>
+            ))}
         </div>
       )}
-      {data && <Pagination currentPage={+currentPage} setCurrentPage={setCurrentPage} totalPages={data.info.pages} />}
     </div>
   );
 };
