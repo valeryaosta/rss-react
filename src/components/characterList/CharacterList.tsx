@@ -3,7 +3,7 @@ import Pagination from '../pagination/Pagination';
 import CharacterCard from '../characterCard/CharacterCard';
 import { CharacterDetailType } from '@/store/types';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
-import { addItem, removeItem } from '@/store/slices/characterSlice';
+import { addItem, removeItem, setSelectedCharacter } from '@/store/slices/characterSlice';
 import styles from './CharacterList.module.css';
 
 type CharacterListProps = {
@@ -19,6 +19,7 @@ const CharacterList = ({ characters, currentPage, totalPages, onPageChange }: Ch
   const selectedItems = useAppSelector((state) => state.characters.selectedItems);
 
   const handleSelectCharacter = (character: CharacterDetailType) => {
+    dispatch(setSelectedCharacter(character));
     router.push(`/?page=${router.query.page || '1'}&search=${router.query.search || ''}&characterId=${character.id}`);
   };
 
