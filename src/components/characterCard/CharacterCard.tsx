@@ -1,27 +1,27 @@
 import React from 'react';
-import { useAppDispatch } from '@/hooks/reduxHooks';
-import { useRouter } from 'next/router';
-import { setSelectedCharacter } from '@/store/slices/characterSlice';
-import { CharacterDetailType } from '@/store/types';
 import Image from 'next/image';
+import { CharacterDetailType } from '@/store/types';
 import styles from '../characterList/CharacterList.module.css';
 
-type Props = {
+type CharacterCardProps = {
   character: CharacterDetailType;
-  getStatusColor: (status: string) => string;
+  onSelect: () => void;
 };
 
-const CharacterCard = ({ character, getStatusColor }: Props) => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-
-  const handleClick = () => {
-    dispatch(setSelectedCharacter(character));
-    router.push(`/?page=${router.query.page || '1'}&search=${router.query.search || ''}&characterId=${character.id}`);
+const CharacterCard = ({ character, onSelect }: CharacterCardProps) => {
+  const getStatusColor = (status: string): string => {
+    switch (status.toLowerCase()) {
+      case 'alive':
+        return 'green';
+      case 'dead':
+        return 'red';
+      default:
+        return 'gray';
+    }
   };
 
   return (
-    <div key={character.id} className={styles['character-card']} onClick={handleClick} role='link'>
+    <div key={character.id} className={styles['character-card']} onClick={onSelect} role='link'>
       <Image
         src={character.image}
         alt={character.name}

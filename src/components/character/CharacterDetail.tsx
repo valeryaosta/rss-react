@@ -1,37 +1,16 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import Spinner from '../spinner/Spinner';
-import { useGetCharacterDetailsQuery, useGetEpisodesQuery } from '@/store/api';
-import { EpisodeType } from '@/store/types';
 import Image from 'next/image';
+import { CharacterDetailType, EpisodeType } from '@/store/types';
 import styles from './CharacterDetail.module.css';
 
 type CharacterDetailProps = {
-  characterId: string;
+  character: CharacterDetailType;
+  episodes: EpisodeType[];
 };
 
-const CharacterDetail = ({ characterId }: CharacterDetailProps) => {
+const CharacterDetail = ({ character, episodes }: CharacterDetailProps) => {
   const router = useRouter();
-
-  const {
-    data: character,
-    error: characterError,
-    isLoading: isCharacterLoading,
-  } = useGetCharacterDetailsQuery(characterId);
-  const episodeUrls = character?.episode || [];
-  const { data: episodes, error: episodesError, isLoading: isEpisodesLoading } = useGetEpisodesQuery(episodeUrls);
-
-  if (isCharacterLoading || isEpisodesLoading) {
-    return <Spinner />;
-  }
-
-  if (characterError || episodesError) {
-    return <p>{characterError?.toString() || episodesError?.toString() || 'Some error occurred'}</p>;
-  }
-
-  if (!character) {
-    return null;
-  }
 
   return (
     <div className={styles['character-detail']}>
@@ -61,11 +40,11 @@ const CharacterDetail = ({ characterId }: CharacterDetailProps) => {
         </p>
         <p>
           <strong>Origin: </strong>
-          {character?.origin?.name || 'not indicated'}
+          {character.origin?.name || 'not indicated'}
         </p>
         <p>
           <strong>Last known location: </strong>
-          {character?.location?.name || 'not indicated'}
+          {character.location?.name || 'not indicated'}
         </p>
         <div className={styles['episodes']}>
           <h2>Episodes:</h2>
