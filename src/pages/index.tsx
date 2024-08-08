@@ -1,7 +1,9 @@
 import { GetServerSideProps } from 'next';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { setCurrentPage, setSearchTerm } from '../store/slices/characterSlice';
+import useLocalStorage from '../hooks/useLocalStorage';
 import SearchBar from '../components/searchbar/SearchBar';
 import CharacterList from '../components/characterList/CharacterList';
 import ButtonWithError from '../components/buttonWithBug/ButtonWithError';
@@ -52,11 +54,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const MainPage = ({ characters, currentPage, totalPages, characterDetail, episodes }: MainPageProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage('searchTerm', '');
+
+  useEffect(() => {
+    const initialPage = Number(router.query.page) || 1;
+    dispatch(setCurrentPage(initialPage));
+    dispatch(setSearchTerm(storedSearchTerm));
+  }, [dispatch, router.query.page, storedSearchTerm]);
 
   const handleSearch = (searchTerm: string) => {
     const query = { page: '1', search: searchTerm, characterId: router.query.characterId as string };
     router.push({ pathname: '/', query });
     dispatch(setSearchTerm(searchTerm));
+    setStoredSearchTerm(searchTerm);
   };
 
   const handlePageChange = (page: number) => {
