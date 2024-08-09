@@ -1,22 +1,23 @@
 import { GetServerSideProps } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAppDispatch } from '@/hooks/reduxHooks';
-import { setCurrentPage, setSearchTerm } from '../store/slices/characterSlice';
+import { setCurrentPage, setSearchTerm } from '@/store/slices/characterSlice';
 import useLocalStorage from '../hooks/useLocalStorage';
 import SearchBar from '../components/searchbar/SearchBar';
 import CharacterList from '../components/characterList/CharacterList';
 import CharacterDetail from '@/components/character/CharacterDetail';
 import Flyout from '../components/flyout/Flyout';
+import Spinner from '../components/spinner/Spinner';
 import { CharacterDetailType, EpisodeType } from '@/store/types';
 import styles from './index.module.css';
 
 type MainPageProps = {
-  characters: CharacterDetailType[];
+  initialCharacters: CharacterDetailType[];
   currentPage: number;
   totalPages: number;
-  characterDetail?: CharacterDetailType;
-  episodes?: EpisodeType[];
+  initialCharacterDetail: CharacterDetailType | null;
+  initialEpisodes: EpisodeType[] | null;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -25,55 +26,93 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const characterRes = await fetch(`https://rickandmortyapi.com/api/character?page=${page}&name=${search}`);
   const characterData = await characterRes.json();
 
-  let characterDetail = null;
-  let episodes = null;
+  let characterDetail: CharacterDetailType | null = null;
+  let episodes: EpisodeType[] | null = null;
 
   if (characterId) {
     const characterDetailRes = await fetch(`https://rickandmortyapi.com/api/character/${characterId}`);
     characterDetail = await characterDetailRes.json();
 
-    const episodeIds = characterDetail.episode.map((url: string) => url.split('/').pop()).join(',');
-    const episodesRes = await fetch(`https://rickandmortyapi.com/api/episode/${episodeIds}`);
-    episodes = await episodesRes.json();
+    if (characterDetail && characterDetail.episode.length > 0) {
+      const episodeIds = characterDetail.episode.map((url: string) => url.split('/').pop()).join(',');
+      const episodesRes = await fetch(`https://rickandmortyapi.com/api/episode/${episodeIds}`);
+      const fetchedEpisodes = await episodesRes.json();
 
-    episodes = Array.isArray(episodes) ? episodes : [episodes];
+      episodes = Array.isArray(fetchedEpisodes) ? fetchedEpisodes : [fetchedEpisodes];
+    }
   }
 
   return {
     props: {
-      characters: characterData.results || [],
+      initialCharacters: characterData.results || [],
       currentPage: parseInt(page as string, 10),
       totalPages: characterData.info?.pages || 0,
-      characterDetail: characterDetail || null,
-      episodes: episodes || null,
+      initialCharacterDetail: characterDetail,
+      initialEpisodes: episodes,
     },
   };
 };
 
-const MainPage = ({ characters, currentPage, totalPages, characterDetail, episodes }: MainPageProps) => {
-  const dispatch = useAppDispatch();
+const MainPage = ({
+  initialCharacters,
+  currentPage,
+  totalPages,
+  initialCharacterDetail,
+  initialEpisodes,
+}: MainPageProps) => {
+  const [characters, setCharacters] = useState<CharacterDetailType[]>(initialCharacters);
+  const [characterDetail, setCharacterDetail] = useState<CharacterDetailType | null>(initialCharacterDetail);
+  const [episodes, setEpisodes] = useState<EpisodeType[]>(initialEpisodes || []);
+  const [isLoadingCharacters, setIsLoadingCharacters] = useState(false);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage('searchTerm', '');
 
   useEffect(() => {
-    const initialPage = Number(router.query.page) || 1;
-    dispatch(setCurrentPage(initialPage));
-    dispatch(setSearchTerm(storedSearchTerm));
-  }, [dispatch, router.query.page, storedSearchTerm]);
+    const fetchCharacters = async () => {
+      setIsLoadingCharacters(true);
+      const characterRes = await fetch(
+        `https://rickandmortyapi.com/api/character?page=${currentPage}&name=${storedSearchTerm}`,
+      );
+      const characterData = await characterRes.json();
+      setCharacters(characterData.results || []);
+      setIsLoadingCharacters(false);
+    };
+
+    fetchCharacters();
+  }, [currentPage, storedSearchTerm]);
+
+  useEffect(() => {
+    const fetchCharacterDetail = async (characterId: string) => {
+      setIsLoadingDetail(true);
+      const characterDetailRes = await fetch(`https://rickandmortyapi.com/api/character/${characterId}`);
+      const characterDetail = await characterDetailRes.json();
+
+      const episodeIds = characterDetail.episode.map((url: string) => url.split('/').pop()).join(',');
+      const episodesRes = await fetch(`https://rickandmortyapi.com/api/episode/${episodeIds}`);
+      const episodes = await episodesRes.json();
+
+      setCharacterDetail(characterDetail);
+      setEpisodes(Array.isArray(episodes) ? episodes : [episodes]);
+      setIsLoadingDetail(false);
+    };
+
+    if (router.query.characterId) {
+      fetchCharacterDetail(router.query.characterId as string);
+    }
+  }, [router.query.characterId]);
 
   const handleSearch = (searchTerm: string) => {
-    const query = { page: '1', search: searchTerm, characterId: router.query.characterId as string };
+    const query = { page: '1', search: searchTerm };
     router.push({ pathname: '/', query });
     dispatch(setSearchTerm(searchTerm));
     setStoredSearchTerm(searchTerm);
   };
 
   const handlePageChange = (page: number) => {
-    const query = {
-      page: page.toString(),
-      search: (router.query.search as string) || '',
-      characterId: router.query.characterId as string,
-    };
+    const query = { page: page.toString(), search: (router.query.search as string) || '' };
     router.push({ pathname: '/', query });
     dispatch(setCurrentPage(page));
   };
@@ -87,16 +126,24 @@ const MainPage = ({ characters, currentPage, totalPages, characterDetail, episod
       </div>
       <div className={styles['content-section']}>
         <div className={styles['characters-wrapper']}>
-          <CharacterList
-            characters={characters}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          {isLoadingCharacters ? (
+            <Spinner />
+          ) : (
+            <CharacterList
+              characters={characters}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
-        {isDetailPage && characterDetail && episodes && (
+        {isDetailPage && (
           <div className={styles['character-detail-wrapper']}>
-            <CharacterDetail character={characterDetail} episodes={episodes} />
+            {isLoadingDetail ? (
+              <Spinner />
+            ) : (
+              characterDetail && episodes && <CharacterDetail character={characterDetail} episodes={episodes} />
+            )}
           </div>
         )}
       </div>

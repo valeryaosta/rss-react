@@ -55,6 +55,11 @@
   gap: 15px;
 }
 
+.character-detail-wrapper {
+  overflow-x: hidden;
+  width: 300px;
+}
+
 .app-container.detail-view .characters-wrapper {
   display: block;
   max-width: 300px;
