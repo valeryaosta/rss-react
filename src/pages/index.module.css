@@ -57,7 +57,8 @@
 
 .character-detail-wrapper {
   overflow-x: hidden;
-  width: 300px;
+  min-width: 300px;
+  width: fit-content;
 }
 
 .app-container.detail-view .characters-wrapper {
