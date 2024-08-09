@@ -44,7 +44,13 @@ describe('CharacterList', () => {
   it('renders a list of characters', () => {
     render(
       <Provider store={store}>
-        <CharacterList characters={characters} currentPage={1} totalPages={1} onPageChange={mockOnPageChange} />
+        <CharacterList
+          characters={characters}
+          currentPage={1}
+          totalPages={1}
+          onPageChange={mockOnPageChange}
+          isLoading={false}
+        />
       </Provider>,
     );
 
@@ -54,11 +60,33 @@ describe('CharacterList', () => {
   it('displays "No characters found" when character list is empty', () => {
     render(
       <Provider store={store}>
-        <CharacterList characters={[]} currentPage={1} totalPages={1} onPageChange={mockOnPageChange} />
+        <CharacterList
+          characters={[]}
+          currentPage={1}
+          totalPages={1}
+          onPageChange={mockOnPageChange}
+          isLoading={false}
+        />
       </Provider>,
     );
 
     expect(screen.getByText('No characters found')).toBeInTheDocument();
+  });
+
+  it('displays a spinner when loading is true', () => {
+    render(
+      <Provider store={store}>
+        <CharacterList
+          characters={[]}
+          currentPage={1}
+          totalPages={1}
+          onPageChange={mockOnPageChange}
+          isLoading={true}
+        />
+      </Provider>,
+    );
+
+    expect(screen.getByTestId('spinner')).toBeInTheDocument();
   });
 
   it('calls addItem when a character checkbox is checked', () => {
@@ -66,7 +94,13 @@ describe('CharacterList', () => {
 
     render(
       <Provider store={store}>
-        <CharacterList characters={characters} currentPage={1} totalPages={1} onPageChange={mockOnPageChange} />
+        <CharacterList
+          characters={characters}
+          currentPage={1}
+          totalPages={1}
+          onPageChange={mockOnPageChange}
+          isLoading={false}
+        />
       </Provider>,
     );
 
@@ -83,7 +117,13 @@ describe('CharacterList', () => {
 
     render(
       <Provider store={store}>
-        <CharacterList characters={characters} currentPage={1} totalPages={1} onPageChange={mockOnPageChange} />
+        <CharacterList
+          characters={characters}
+          currentPage={1}
+          totalPages={1}
+          onPageChange={mockOnPageChange}
+          isLoading={false}
+        />
       </Provider>,
     );
 
@@ -96,7 +136,13 @@ describe('CharacterList', () => {
   it('calls onPageChange when the page is changed', () => {
     render(
       <Provider store={store}>
-        <CharacterList characters={characters} currentPage={1} totalPages={2} onPageChange={mockOnPageChange} />
+        <CharacterList
+          characters={characters}
+          currentPage={1}
+          totalPages={2}
+          onPageChange={mockOnPageChange}
+          isLoading={false}
+        />
       </Provider>,
     );
 

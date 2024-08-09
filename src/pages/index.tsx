@@ -126,16 +126,13 @@ const MainPage = ({
       </div>
       <div className={styles['content-section']}>
         <div className={styles['characters-wrapper']}>
-          {isLoadingCharacters ? (
-            <Spinner />
-          ) : (
-            <CharacterList
-              characters={characters}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          )}
+          <CharacterList
+            characters={characters}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            isLoading={isLoadingCharacters}
+          />
         </div>
         {isDetailPage && (
           <div className={styles['character-detail-wrapper']}>
