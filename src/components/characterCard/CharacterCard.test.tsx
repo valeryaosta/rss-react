@@ -1,11 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
-import { configureStore } from '@reduxjs/toolkit';
-import characterReducer from '../../store/slices/characterSlice';
 import CharacterCard from './CharacterCard';
-import { CharacterDetailType } from '../../store/types';
+import { CharacterDetailType } from '@/store/types';
 
 const character: CharacterDetailType = {
   id: '1',
@@ -28,49 +23,13 @@ const character: CharacterDetailType = {
   created: '2017-11-04T18:48:46.250Z',
 };
 
-const getStatusColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case 'alive':
-      return 'green';
-    case 'dead':
-      return 'red';
-    default:
-      return 'gray';
-  }
-};
-
-const store = configureStore({
-  reducer: {
-    characters: characterReducer,
-  },
-});
-
 describe('CharacterCard', () => {
   it('renders character information', () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CharacterCard character={character} getStatusColor={getStatusColor} />
-        </MemoryRouter>
-      </Provider>,
-    );
+    render(<CharacterCard character={character} onSelect={() => {}} />);
 
     expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
     expect(screen.getByText('Alive - Human')).toBeInTheDocument();
     expect(screen.getByText('Last Known Location:')).toBeInTheDocument();
     expect(screen.getByText('First Seen In:')).toBeInTheDocument();
-  });
-
-  it('displays the correct status color', () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CharacterCard character={character} getStatusColor={getStatusColor} />
-        </MemoryRouter>
-      </Provider>,
-    );
-
-    const statusIndicator = screen.getByText('Alive - Human').parentElement?.querySelector('.status-indicator');
-    expect(statusIndicator).toHaveStyle('background-color: green');
   });
 });

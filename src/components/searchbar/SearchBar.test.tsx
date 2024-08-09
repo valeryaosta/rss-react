@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { FC, HTMLAttributes } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import SearchBar from './SearchBar';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import characterReducer from '../../store/slices/characterSlice';
+
+interface ImageProps extends HTMLAttributes<HTMLImageElement> {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: (({ src, alt, width, height, ...restProps }: ImageProps) => {
+    return <img src={src} alt={alt} width={width} height={height} {...restProps} />;
+  }) as FC<ImageProps>,
+}));
 
 describe('SearchBar', () => {
   const mockOnSearch = jest.fn();

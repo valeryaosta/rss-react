@@ -1,4 +1,3 @@
-import React from 'react';
 import Image from 'next/image';
 import { CharacterDetailType } from '@/store/types';
 import styles from '../characterList/CharacterList.module.css';

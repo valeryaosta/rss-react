@@ -42,7 +42,7 @@ const SearchBar = ({ onSearch }: Props) => {
         placeholder='Type character name...'
       />
       <button onClick={handleSearch} disabled={!localSearchTerm.trim()} className={styles['search-btn']}>
-        <Image src={SearchIcon} alt='search icon' className={styles['input-image']} />
+        <Image src={SearchIcon} alt='search icon' className={styles['input-image']} width={15} height={15} />
         Search
       </button>
     </div>

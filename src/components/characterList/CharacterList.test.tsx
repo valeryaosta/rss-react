@@ -1,17 +1,9 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { render, screen, fireEvent } from '@testing-library/react';
+import CharacterList from './CharacterList';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import CharacterList from './CharacterList';
-import characterReducer from '../../store/slices/characterSlice';
-import { useGetCharactersQuery } from '../../store/api';
-import { CharacterDetailType } from '../../store/types';
-import { addItem } from '../../store/slices/characterSlice';
-
-jest.mock('../../store/api');
-
-const mockUseGetCharactersQuery = useGetCharactersQuery as jest.MockedFunction<typeof useGetCharactersQuery>;
+import characterReducer, { addItem, removeItem } from '@/store/slices/characterSlice';
+import { CharacterDetailType } from '@/store/types';
 
 const characters: CharacterDetailType[] = [
   {
@@ -43,88 +35,73 @@ const store = configureStore({
 });
 
 describe('CharacterList', () => {
-  const mockSetCurrentPage = jest.fn();
+  const mockOnPageChange = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders a list of characters', async () => {
-    mockUseGetCharactersQuery.mockReturnValue({
-      data: { results: characters, info: { pages: 1 } },
-      error: undefined,
-      isLoading: false,
-      refetch: jest.fn(),
-    } as unknown as ReturnType<typeof useGetCharactersQuery>);
-
+  it('renders a list of characters', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter>
-          <CharacterList setCurrentPage={mockSetCurrentPage} />
-        </MemoryRouter>
+        <CharacterList characters={characters} currentPage={1} totalPages={1} onPageChange={mockOnPageChange} />
       </Provider>,
     );
 
-    expect(await screen.findByText('Rick Sanchez')).toBeInTheDocument();
+    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
   });
 
-  it('displays loading spinner while fetching data', () => {
-    mockUseGetCharactersQuery.mockReturnValue({
-      data: undefined,
-      error: undefined,
-      isLoading: true,
-      refetch: jest.fn(),
-    } as unknown as ReturnType<typeof useGetCharactersQuery>);
-
+  it('displays "No characters found" when character list is empty', () => {
     render(
       <Provider store={store}>
-        <MemoryRouter>
-          <CharacterList setCurrentPage={mockSetCurrentPage} />
-        </MemoryRouter>
+        <CharacterList characters={[]} currentPage={1} totalPages={1} onPageChange={mockOnPageChange} />
       </Provider>,
     );
 
-    expect(screen.getByTestId('spinner')).toBeInTheDocument();
+    expect(screen.getByText('No characters found')).toBeInTheDocument();
   });
 
-  it('displays error message when fetching data fails', async () => {
-    mockUseGetCharactersQuery.mockReturnValue({
-      data: undefined,
-      error: new Error('Failed to fetch characters'),
-      isLoading: false,
-      refetch: jest.fn(),
-    } as unknown as ReturnType<typeof useGetCharactersQuery>);
+  it('calls addItem when a character checkbox is checked', () => {
+    const mockDispatch = jest.spyOn(store, 'dispatch');
 
     render(
       <Provider store={store}>
-        <MemoryRouter>
-          <CharacterList setCurrentPage={mockSetCurrentPage} />
-        </MemoryRouter>
+        <CharacterList characters={characters} currentPage={1} totalPages={1} onPageChange={mockOnPageChange} />
       </Provider>,
     );
 
-    expect(await screen.findByText(/Failed to fetch characters/)).toBeInTheDocument();
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+
+    expect(mockDispatch).toHaveBeenCalledWith(addItem(characters[0]));
   });
 
-  it('displays selected character with checked checkbox', async () => {
+  it('calls removeItem when a character checkbox is unchecked', () => {
     store.dispatch(addItem(characters[0]));
 
-    mockUseGetCharactersQuery.mockReturnValue({
-      data: { results: characters, info: { pages: 1 } },
-      error: undefined,
-      isLoading: false,
-      refetch: jest.fn(),
-    } as unknown as ReturnType<typeof useGetCharactersQuery>);
+    const mockDispatch = jest.spyOn(store, 'dispatch');
 
     render(
       <Provider store={store}>
-        <MemoryRouter>
-          <CharacterList setCurrentPage={mockSetCurrentPage} />
-        </MemoryRouter>
+        <CharacterList characters={characters} currentPage={1} totalPages={1} onPageChange={mockOnPageChange} />
       </Provider>,
     );
 
-    const checkbox = await screen.findByRole('checkbox');
-    expect(checkbox).toBeChecked();
+    const checkbox = screen.getByRole('checkbox');
+    fireEvent.click(checkbox);
+
+    expect(mockDispatch).toHaveBeenCalledWith(removeItem(characters[0].id));
+  });
+
+  it('calls onPageChange when the page is changed', () => {
+    render(
+      <Provider store={store}>
+        <CharacterList characters={characters} currentPage={1} totalPages={2} onPageChange={mockOnPageChange} />
+      </Provider>,
+    );
+
+    fireEvent.click(screen.getByText('2'));
+
+    expect(mockOnPageChange).toHaveBeenCalledWith(2);
   });
 });

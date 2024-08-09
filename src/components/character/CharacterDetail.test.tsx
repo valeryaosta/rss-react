@@ -1,112 +1,53 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import characterReducer from '../../store/slices/characterSlice';
-import { useGetCharactersQuery } from '@/store/api';
-import CharacterList from '../characterList/CharacterList';
+import CharacterDetail from './CharacterDetail';
+import { CharacterDetailType, EpisodeType } from '@/store/types';
 
-jest.mock('../../store/api');
+const character: CharacterDetailType = {
+  id: '1',
+  name: 'Rick Sanchez',
+  status: 'Alive',
+  species: 'Human',
+  type: '',
+  gender: 'Male',
+  origin: {
+    name: 'Earth (C-137)',
+    url: 'https://rickandmortyapi.com/api/location/1',
+  },
+  location: {
+    name: 'Earth (Replacement Dimension)',
+    url: 'https://rickandmortyapi.com/api/location/20',
+  },
+  image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+  episode: ['https://rickandmortyapi.com/api/episode/1'],
+  url: 'https://rickandmortyapi.com/api/character/1',
+  created: '2017-11-04T18:48:46.250Z',
+};
 
-const mockUseGetCharactersQuery = useGetCharactersQuery as jest.MockedFunction<typeof useGetCharactersQuery>;
-
-const characters = [
+const episodes: EpisodeType[] = [
   {
-    id: '1',
-    name: 'Rick Sanchez',
-    status: 'Alive',
-    species: 'Human',
-    gender: 'Male',
-    origin: {
-      name: 'Earth (C-137)',
-      url: 'https://rickandmortyapi.com/api/location/1',
-    },
-    location: {
-      name: 'Earth (Replacement Dimension)',
-      url: 'https://rickandmortyapi.com/api/location/20',
-    },
-    image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-    episode: ['https://rickandmortyapi.com/api/episode/1'],
+    id: 1,
+    name: 'Pilot',
+    air_date: 'December 2, 2013',
+    episode: 'S01E01',
+    characters: [],
+    url: '',
+    created: '',
   },
 ];
 
-const store = configureStore({
-  reducer: {
-    characters: characterReducer,
-  },
-});
+describe('CharacterDetail', () => {
+  it('renders character detail information', () => {
+    render(<CharacterDetail character={character} episodes={episodes} />);
 
-describe('CharacterList', () => {
-  const mockSetCurrentPage = jest.fn();
-
-  beforeEach(() => {
-    jest.clearAllMocks();
+    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
+    expect(screen.getByText('Alive')).toBeInTheDocument();
+    expect(screen.getByText('Human')).toBeInTheDocument();
+    expect(screen.getByText('Male')).toBeInTheDocument();
   });
 
-  it('renders a list of characters', async () => {
-    mockUseGetCharactersQuery.mockReturnValue({
-      data: { results: characters, info: { pages: 1 } },
-      error: undefined,
-      isLoading: false,
-      refetch: jest.fn(),
-      isFetching: false,
-      isUninitialized: false,
-      isError: false,
-    } as unknown as ReturnType<typeof useGetCharactersQuery>);
+  it('displays "No episodes found." when episodes list is empty', () => {
+    render(<CharacterDetail character={character} episodes={[]} />);
 
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CharacterList setCurrentPage={mockSetCurrentPage} />
-        </MemoryRouter>
-      </Provider>,
-    );
-
-    expect(await screen.findByText('Rick Sanchez')).toBeInTheDocument();
-  });
-
-  it('displays loading spinner while fetching data', () => {
-    mockUseGetCharactersQuery.mockReturnValue({
-      data: undefined,
-      error: undefined,
-      isLoading: true,
-      refetch: jest.fn(),
-      isFetching: false,
-      isUninitialized: false,
-      isError: false,
-    } as unknown as ReturnType<typeof useGetCharactersQuery>);
-
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CharacterList setCurrentPage={mockSetCurrentPage} />
-        </MemoryRouter>
-      </Provider>,
-    );
-
-    expect(screen.getByTestId('spinner')).toBeInTheDocument();
-  });
-
-  it('displays error message when fetching data fails', async () => {
-    mockUseGetCharactersQuery.mockReturnValue({
-      data: undefined,
-      error: new Error('Failed to fetch characters'),
-      isLoading: false,
-      refetch: jest.fn(),
-      isFetching: false,
-      isUninitialized: false,
-      isError: true,
-    } as unknown as ReturnType<typeof useGetCharactersQuery>);
-
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CharacterList setCurrentPage={mockSetCurrentPage} />
-        </MemoryRouter>
-      </Provider>,
-    );
-
-    expect(await screen.findByText(/Failed to fetch characters/i)).toBeInTheDocument();
+    expect(screen.getByText('No episodes found.')).toBeInTheDocument();
   });
 });

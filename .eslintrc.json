@@ -47,6 +47,12 @@
       "parserOptions": {
         "sourceType": "script"
       }
+    },
+    {
+      "files": ["**/*.test.tsx", "**/__mocks__/*.tsx"],
+      "rules": {
+        "@next/next/no-img-element": "off"
+      }
     }
   ],
   "ignorePatterns": ["dist", ".eslintrc.json", "jest.config.cjs", "__mocks__/*"]

@@ -6,7 +6,6 @@ import { setCurrentPage, setSearchTerm } from '../store/slices/characterSlice';
 import useLocalStorage from '../hooks/useLocalStorage';
 import SearchBar from '../components/searchbar/SearchBar';
 import CharacterList from '../components/characterList/CharacterList';
-import ButtonWithError from '../components/buttonWithBug/ButtonWithError';
 import CharacterDetail from '@/components/character/CharacterDetail';
 import Flyout from '../components/flyout/Flyout';
 import { CharacterDetailType, EpisodeType } from '@/store/types';
@@ -84,7 +83,6 @@ const MainPage = ({ characters, currentPage, totalPages, characterDetail, episod
   return (
     <div className={`app-container ${isDetailPage ? 'detail-view' : ''}`}>
       <div className={styles['searchbar-section']}>
-        <ButtonWithError />
         <SearchBar onSearch={handleSearch} />
       </div>
       <div className={styles['content-section']}>

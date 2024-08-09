@@ -1,11 +1,10 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import Flyout from './Flyout';
 import characterReducer from '../../store/slices/characterSlice';
-import { CharacterDetailType } from '../../store/types';
-import { RootState } from '../../store/store';
+import { CharacterDetailType } from '@/store/types';
+import { RootState } from '@/store/store';
 import { saveAs } from 'file-saver';
 
 jest.mock('file-saver', () => ({
