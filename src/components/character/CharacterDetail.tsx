@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { CharacterDetailType, EpisodeType } from '@/store/types';
 import styles from './CharacterDetail.module.css';
@@ -10,12 +10,17 @@ type CharacterDetailProps = {
 
 const CharacterDetail = ({ character, episodes }: CharacterDetailProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleBack = () => {
+    const page = searchParams.get('page') || '1';
+    const search = searchParams.get('search') || '';
+    router.push(`/?page=${page}&search=${search}`);
+  };
 
   return (
     <div className={styles['character-detail']}>
-      <button onClick={() => router.push(`/?page=${router.query.page || '1'}&search=${router.query.search || ''}`)}>
-        Back
-      </button>
+      <button onClick={handleBack}>Back</button>
       <Image
         src={character.image}
         alt={character.name}

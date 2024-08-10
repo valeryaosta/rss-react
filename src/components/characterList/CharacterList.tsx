@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../pagination/Pagination';
 import CharacterCard from '../characterCard/CharacterCard';
 import { CharacterDetailType } from '@/store/types';
@@ -17,12 +17,15 @@ type CharacterListProps = {
 
 const CharacterList = ({ characters, currentPage, totalPages, onPageChange, isLoading }: CharacterListProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const selectedItems = useAppSelector((state) => state.characters.selectedItems);
 
   const handleSelectCharacter = (character: CharacterDetailType) => {
     dispatch(setSelectedCharacter(character));
-    router.push(`/?page=${router.query.page || '1'}&search=${router.query.search || ''}&characterId=${character.id}`);
+    const page = searchParams.get('page') || '1';
+    const search = searchParams.get('search') || '';
+    router.push(`/?page=${page}&search=${search}&characterId=${character.id}`);
   };
 
   const handleSelectItem = (character: CharacterDetailType) => {

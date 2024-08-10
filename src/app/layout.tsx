@@ -1,5 +1,6 @@
-import { AppProps } from 'next/app';
-import { ElementType } from 'react';
+'use client';
+
+import { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import store from '../store/store';
 import ErrorBoundary from '../components/errorBoundary/ErrorBoundary';
@@ -8,32 +9,33 @@ import { ThemeProvider, useTheme } from '../contexts/ThemeContext';
 import ThemeSwitcher from '@/components/themeSwitcher/ThemeSwitcher';
 import '../index.css';
 
-type MyAppContentProps = {
-  Component: ElementType;
-  pageProps: Record<string, unknown>;
-};
+interface LayoutProps {
+  children: ReactNode;
+}
 
-const MyAppContent = ({ Component, pageProps }: MyAppContentProps) => {
+function MyAppContent({ children }: LayoutProps) {
   const { theme } = useTheme();
 
   return (
     <div className={`app ${theme}`}>
       <ErrorBoundary fallback={<FallbackContent />}>
         <ThemeSwitcher />
-        <Component {...pageProps} />
+        {children}
       </ErrorBoundary>
     </div>
   );
-};
+}
 
-const MyApp = ({ Component, pageProps }: AppProps) => {
+export default function RootLayout({ children }: LayoutProps) {
   return (
-    <Provider store={store}>
-      <ThemeProvider>
-        <MyAppContent Component={Component} pageProps={pageProps} />
-      </ThemeProvider>
-    </Provider>
+    <html lang='en'>
+      <body>
+        <Provider store={store}>
+          <ThemeProvider>
+            <MyAppContent>{children}</MyAppContent>
+          </ThemeProvider>
+        </Provider>
+      </body>
+    </html>
   );
-};
-
-export default MyApp;
+}

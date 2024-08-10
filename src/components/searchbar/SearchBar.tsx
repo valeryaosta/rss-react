@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useAppSelector } from '@/hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import Image from 'next/image';
 import SearchIcon from '../../../public/search.svg';
 import styles from './Searchbar.module.css';
+import { setSearchTerm } from '@/store/slices/characterSlice.ts';
 
 type Props = {
   onSearch: (searchTerm: string) => void;
 };
 
 const SearchBar = ({ onSearch }: Props) => {
+  const dispatch = useAppDispatch();
   const searchTerm = useAppSelector((state) => state.characters.searchTerm);
   const [localSearchTerm, setLocalSearchTerm] = useState<string>(searchTerm);
 
   useEffect(() => {
-    setLocalSearchTerm(searchTerm);
-  }, [searchTerm]);
+    const storedSearch = localStorage.getItem('searchTerm') || '';
+    setLocalSearchTerm(storedSearch);
+    dispatch(setSearchTerm(storedSearch));
+  }, [dispatch]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocalSearchTerm(event.target.value);
@@ -28,6 +32,7 @@ const SearchBar = ({ onSearch }: Props) => {
     const { value } = event.currentTarget;
     if (value === '') {
       onSearch('');
+      dispatch(setSearchTerm(''));
     }
   };
 

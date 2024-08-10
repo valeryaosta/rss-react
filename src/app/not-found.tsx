@@ -1,6 +1,8 @@
-import FallbackContent from '../components/fallbackContent/FallbackContent';
-import { useRouter } from 'next/router';
-import styles from './404.module.css';
+'use client';
+
+import FallbackContent from '../components/fallbackContent/FallbackContent.tsx';
+import { useRouter } from 'next/navigation';
+import styles from './not-found.module.css';
 
 const NotFoundPage = () => {
   const router = useRouter();
