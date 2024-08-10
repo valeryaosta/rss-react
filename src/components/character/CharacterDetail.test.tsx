@@ -1,6 +1,28 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { ImgHTMLAttributes } from 'react';
 import CharacterDetail from './CharacterDetail';
 import { CharacterDetailType, EpisodeType } from '@/store/types';
+
+const mockPush = jest.fn();
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+  useSearchParams: () => ({
+    get: jest.fn(() => '1'),
+  }),
+}));
+
+type MockImageProps = ImgHTMLAttributes<HTMLImageElement>;
+
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: (props: MockImageProps) => {
+    const { alt = 'image', ...rest } = props;
+    return <img alt={alt} {...rest} />;
+  },
+}));
 
 const character: CharacterDetailType = {
   id: '1',
@@ -43,11 +65,33 @@ describe('CharacterDetail', () => {
     expect(screen.getByText('Alive')).toBeInTheDocument();
     expect(screen.getByText('Human')).toBeInTheDocument();
     expect(screen.getByText('Male')).toBeInTheDocument();
+    expect(screen.getByText('S01E01')).toBeInTheDocument();
   });
 
   it('displays "No episodes found." when episodes list is empty', () => {
     render(<CharacterDetail character={character} episodes={[]} />);
 
     expect(screen.getByText('No episodes found.')).toBeInTheDocument();
+  });
+
+  it('renders the back button', () => {
+    render(<CharacterDetail character={character} episodes={episodes} />);
+    const backButton = screen.getByText('Back');
+    expect(backButton).toBeInTheDocument();
+  });
+
+  it('renders the character image with correct src', () => {
+    render(<CharacterDetail character={character} episodes={episodes} />);
+    const image = screen.getByAltText('Rick Sanchez');
+    expect(image).toBeInTheDocument();
+    expect(image).toHaveAttribute('src', 'https://rickandmortyapi.com/api/character/avatar/1.jpeg');
+  });
+
+  it('renders the back button and triggers the router push', () => {
+    render(<CharacterDetail character={character} episodes={episodes} />);
+    const backButton = screen.getByText('Back');
+    fireEvent.click(backButton);
+
+    expect(mockPush).toHaveBeenCalledTimes(0);
   });
 });

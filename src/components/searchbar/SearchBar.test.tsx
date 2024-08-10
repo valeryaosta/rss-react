@@ -40,7 +40,22 @@ describe('SearchBar', () => {
     return render(<Provider store={store}>{ui}</Provider>);
   };
 
-  it('renders with initial searchTerm from Redux', () => {
+  beforeEach(() => {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
+      if (key === 'searchTerm') {
+        return 'initial term';
+      }
+      return null;
+    });
+
+    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('renders with initial searchTerm from localStorage', () => {
     renderWithProviders(<SearchBar onSearch={mockOnSearch} />);
     const inputElement = screen.getByRole('searchbox') as HTMLInputElement;
     expect(inputElement.value).toBe('initial term');

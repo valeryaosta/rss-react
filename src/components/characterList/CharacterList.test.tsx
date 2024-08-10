@@ -5,6 +5,23 @@ import { configureStore } from '@reduxjs/toolkit';
 import characterReducer, { addItem, removeItem } from '@/store/slices/characterSlice';
 import { CharacterDetailType } from '@/store/types';
 
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+  useSearchParams: () => ({
+    get: jest.fn((key) => {
+      if (key === 'page') {
+        return '1';
+      }
+      if (key === 'search') {
+        return 'Rick';
+      }
+      return null;
+    }),
+  }),
+}));
+
 const characters: CharacterDetailType[] = [
   {
     id: '1',
