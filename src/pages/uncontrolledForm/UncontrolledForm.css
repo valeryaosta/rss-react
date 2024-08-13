@@ -3,6 +3,7 @@ form {
   flex-direction: column;
   max-width: 400px;
   margin: auto;
+  padding: 10px 15px;
 }
 
 form div {
@@ -60,4 +61,8 @@ form .input-terms label {
 form input[type='checkbox'] {
   width: 15px;
   height: 15px;
+}
+
+form .input-upload input {
+  background: #fff;
 }

@@ -117,7 +117,7 @@ const UncontrolledForm: React.FC = () => {
         </select>
         {errors.gender && <p>{errors.gender}</p>}
       </div>
-      <div>
+      <div className='input-upload'>
         <label htmlFor='picture'>Upload Picture</label>
         <input id='picture' type='file' ref={pictureRef} accept='image/jpeg,image/png,image/gif' />
         {errors.picture && <p>{errors.picture}</p>}
