@@ -1,11 +1,136 @@
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/reduxHooks.ts';
+import { saveUncontrolledFormData } from '../../store/slices/formSlice.ts';
+import { validationSchema } from '../../helpers/validationHelper.ts';
+import * as Yup from 'yup';
 import './UncontrolledForm.css';
 
-const UncontrolledForm = () => {
+const UncontrolledForm: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const nameRef = useRef<HTMLInputElement>(null);
+  const ageRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
+  const genderRef = useRef<HTMLSelectElement>(null);
+  const termsRef = useRef<HTMLInputElement>(null);
+  const pictureRef = useRef<HTMLInputElement>(null);
+  const countryRef = useRef<HTMLInputElement>(null);
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const countries = ['United States', 'Canada', 'United Kingdom', 'Australia', 'France'];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const pictureFile = pictureRef.current?.files?.[0] || null;
+
+    const formData = {
+      name: nameRef.current?.value || '',
+      age: parseInt(ageRef.current?.value || '0', 10),
+      email: emailRef.current?.value || '',
+      password: passwordRef.current?.value || '',
+      confirmPassword: confirmPasswordRef.current?.value || '',
+      gender: genderRef.current?.value || '',
+      terms: termsRef.current?.checked || false,
+      picture: pictureFile,
+      country: countryRef.current?.value || '',
+    };
+
+    try {
+      await validationSchema.validate(formData, { abortEarly: false });
+
+      let base64Image = '';
+      if (pictureFile) {
+        const reader = new FileReader();
+        reader.readAsDataURL(pictureFile);
+        base64Image = await new Promise<string>((resolve) => {
+          reader.onload = () => resolve(reader.result as string);
+        });
+      }
+
+      dispatch(saveUncontrolledFormData({ ...formData, picture: base64Image }));
+
+      navigate('/');
+    } catch (err: unknown) {
+      if (err instanceof Yup.ValidationError) {
+        const validationErrors: { [key: string]: string } = {};
+        err.inner.forEach((error) => {
+          validationErrors[error.path!] = error.message;
+        });
+        setErrors(validationErrors);
+      } else {
+        console.error('Some unexpected error:', err);
+      }
+    }
+  };
+
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <h1>Uncontrolled Form Page</h1>
-      <p>This is the page for the uncontrolled form.</p>
-    </div>
+      <div>
+        <label htmlFor='email'>Email</label>
+        <input id='email' type='text' ref={emailRef} />
+        {errors.email && <p>{errors.email}</p>}
+      </div>
+      <div>
+        <label htmlFor='password'>Password</label>
+        <input id='password' type='password' ref={passwordRef} />
+        {errors.password && <p>{errors.password}</p>}
+      </div>
+      <div>
+        <label htmlFor='confirmPassword'>Confirm Password</label>
+        <input id='confirmPassword' type='password' ref={confirmPasswordRef} />
+        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+      </div>
+      <div>
+        <label htmlFor='name'>Name</label>
+        <input id='name' type='text' ref={nameRef} />
+        {errors.name && <p>{errors.name}</p>}
+      </div>
+      <div>
+        <label htmlFor='age'>Age</label>
+        <input id='age' type='text' ref={ageRef} />
+        {errors.age && <p>{errors.age}</p>}
+      </div>
+      <div>
+        <label htmlFor='country'>Country</label>
+        <input id='country' type='text' ref={countryRef} list='countryList' />
+        <datalist id='countryList'>
+          {countries.map((country, index) => (
+            <option key={index} value={country} />
+          ))}
+        </datalist>
+        {errors.country && <p>{errors.country}</p>}
+      </div>
+      <div>
+        <label htmlFor='gender'>Gender</label>
+        <select id='gender' ref={genderRef}>
+          <option value=''>Select Gender</option>
+          <option value='male'>Male</option>
+          <option value='female'>Female</option>
+          <option value='other'>Other</option>
+        </select>
+        {errors.gender && <p>{errors.gender}</p>}
+      </div>
+      <div>
+        <label htmlFor='picture'>Upload Picture</label>
+        <input id='picture' type='file' ref={pictureRef} accept='image/jpeg,image/png,image/gif' />
+        {errors.picture && <p>{errors.picture}</p>}
+      </div>
+      <div>
+        <div className='input-terms'>
+          <input id='terms' type='checkbox' ref={termsRef} />
+          <label htmlFor='terms'>Accept Terms and Conditions</label>
+        </div>
+        {errors.terms && <p>{errors.terms}</p>}
+      </div>
+      <button type='submit'>Submit</button>
+    </form>
   );
 };
 

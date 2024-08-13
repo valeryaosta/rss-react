@@ -6,7 +6,9 @@ export interface FormInputData {
   email: string;
   gender: string;
   password: string;
-  image: string;
+  confirmPassword: string;
+  terms: boolean;
+  picture: string;
   country: string;
 }
 
