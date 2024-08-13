@@ -1,0 +1,64 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 20px 0;
+  gap: 15px;
+}
+
+.pagination-button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  color: #07142f;
+  margin: 0 2px;
+  font-weight: 600;
+}
+
+.pagination-button.active {
+  background-color: #6b0e8d !important;
+  color: white;
+  border: 1px solid #a8a8af;
+}
+
+.pagination-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination-button:hover:not(.active):not(:disabled) {
+  opacity: 0.8;
+}
+
+.pagination-info {
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.app-container.detail-view .characters-wrapper .pagination .pagintauin-button-wrapper .pagination-button {
+  padding: 8px 10px;
+}
+.app-container.detail-view .characters-wrapper .pagination {
+  justify-content: end;
+}
+
+@media screen and (max-width: 768px) {
+  .pagination-button,
+  .app-container.detail-view .characters-wrapper .pagination .pagintauin-button-wrapper .pagination-button {
+    padding: 4px 12px;
+    margin: 0 1px;
+  }
+  .app-container.detail-view .characters-wrapper .pagination {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .pagination-button,
+  .app-container.detail-view .characters-wrapper .pagination .pagintauin-button-wrapper .pagination-button {
+    padding: 4px 4px;
+  }
+}

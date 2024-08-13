@@ -1,0 +1,116 @@
+.character-list {
+  align-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  padding-block: 30px;
+  color: #07142f;
+}
+
+.character-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.character-card {
+  flex-grow: 1;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: #07142f;
+}
+
+.character-card:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.character-card-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.character-card .character-info {
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  flex-grow: 1;
+}
+
+.character-card .character-info p {
+  margin: 0;
+}
+
+.character-card .character-info p:first-child {
+  font-weight: 800;
+}
+
+.character-card .character-info .status {
+  display: flex;
+  align-items: center;
+}
+
+.character-card .character-info .status .status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.character-card .character-info .specific-text {
+  font-size: 12px;
+}
+
+.character-card .character-info .specific {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+@media screen and (max-width: 1350px) {
+  .character-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .character-card-image {
+    max-height: 250px;
+  }
+}
+@media screen and (max-width: 1100px) {
+  .character-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .character-card-image {
+    max-height: 220px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .character-list {
+    grid-template-columns: 300px;
+    justify-content: center;
+    max-height: 350px;
+    overflow-y: scroll;
+  }
+  .content-section {
+    flex-wrap: wrap;
+  }
+}
+
+.error {
+  text-align: center;
+}
+
+.character-checkbox {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  align-self: flex-start;
+  width: 25px;
+  height: 25px;
+  z-index: 10;
+}
