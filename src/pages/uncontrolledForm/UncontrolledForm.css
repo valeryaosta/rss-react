@@ -45,7 +45,7 @@ form button {
 }
 
 form button:disabled {
-  background-color: #ccc;
+  opacity: 0.5;
 }
 
 form .input-terms {

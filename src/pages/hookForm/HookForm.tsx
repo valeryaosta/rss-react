@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/reduxHooks.ts';
 import { saveHookFormData } from '../../store/slices/formSlice.ts';
-import { validationSchema2  } from '../../helpers/validationHelper.ts';
+import { validationSchemaHookForm } from '../../helpers/validationHelper.ts';
 import '../uncontrolledForm/UncontrolledForm.css';
 
 interface FormInput {
@@ -14,7 +14,7 @@ interface FormInput {
   confirmPassword: string;
   gender: string;
   terms: boolean;
-  picture?: File | null;
+  picture?: FileList | null;
   country: string;
 }
 
@@ -27,10 +27,10 @@ const HookForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     mode: 'all',
-    resolver: yupResolver(validationSchema2),
+    resolver: yupResolver(validationSchemaHookForm),
   });
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
@@ -100,9 +100,9 @@ const HookForm = () => {
         </select>
         {errors.gender && <p>{errors.gender.message}</p>}
       </div>
-      <div className="input-upload">
+      <div className='input-upload'>
         <label htmlFor='picture'>Upload Picture</label>
-        <input id='picture' type='file' {...register('picture')} accept='image/jpeg,image/png,image/gif' />
+        <input id='picture' type='file' {...register('picture')} accept='image/jpg,image/jpeg,image/png' />
         {errors.picture && <p>{errors.picture.message}</p>}
       </div>
       <div>
@@ -112,7 +112,9 @@ const HookForm = () => {
         </div>
         {errors.terms && <p>{errors.terms.message}</p>}
       </div>
-      <button type='submit'>Submit</button>
+      <button type='submit' disabled={!isValid}>
+        Submit
+      </button>
     </form>
   );
 };

@@ -25,15 +25,12 @@ export const validationSchema = Yup.object().shape({
     .nullable()
     .test('fileType', 'Unsupported File Format', (value) => {
       if (value) {
-        console.log('File type:', value.type);
-        return ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].includes(value.type);
+        return ['image/jpg', 'image/jpeg', 'image/png'].includes(value.type);
       }
       return true;
     })
     .test('fileSize', 'File Size is too large', (value) => {
       if (value) {
-        console.log('File size in bytes:', value.size);
-        console.log('File size in MB:', value.size / 1024 / 1024);
         const fileSizeInMB = value.size / 1024 / 1024;
         return fileSizeInMB <= 1;
       }
@@ -42,7 +39,7 @@ export const validationSchema = Yup.object().shape({
   country: Yup.string().required('Country is required'),
 });
 
-export const validationSchema2 = Yup.object().shape({
+export const validationSchemaHookForm = Yup.object().shape({
   name: Yup.string()
     .matches(/^[A-Z]/, 'Name must start with an uppercase letter')
     .required('Name is required'),
@@ -63,17 +60,17 @@ export const validationSchema2 = Yup.object().shape({
     .required('Confirm password is required'),
   gender: Yup.string().required('Gender is required'),
   terms: Yup.boolean().oneOf([true], 'You must accept the terms and conditions').default(false),
-  picture: Yup.mixed<File>()
+  picture: Yup.mixed<FileList>()
     .nullable()
     .test('fileType', 'Unsupported File Format', (value) => {
-      if (value && value instanceof File) {
-        return ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].includes(value.type);
+      if (value && value[0]) {
+        return ['image/jpg', 'image/jpeg', 'image/png'].includes(value[0].type);
       }
       return true;
     })
     .test('fileSize', 'File Size is too large', (value) => {
-      if (value && value instanceof File) {
-        const fileSizeInMB = value.size / 1024 / 1024;
+      if (value && value[0]) {
+        const fileSizeInMB = value[0].size / 1024 / 1024;
         return fileSizeInMB <= 1;
       }
       return true;
