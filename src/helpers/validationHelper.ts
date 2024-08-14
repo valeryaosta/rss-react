@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { store } from '../store';
 
 export const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -35,8 +36,14 @@ export const validationSchema = Yup.object().shape({
         return fileSizeInMB <= 1;
       }
       return true;
+    })
+    .required('Picture is required'),
+  country: Yup.string()
+    .required('Country is required')
+    .test('is-valid-country', 'Please select a valid country', (value) => {
+      if (!value) return false;
+      return store.getState().country.countries.includes(value);
     }),
-  country: Yup.string().required('Country is required'),
 });
 
 export const validationSchemaHookForm = Yup.object().shape({
@@ -74,6 +81,12 @@ export const validationSchemaHookForm = Yup.object().shape({
         return fileSizeInMB <= 1;
       }
       return true;
+    })
+    .required('Picture is required'),
+  country: Yup.string()
+    .required('Country is required')
+    .test('is-valid-country', 'Please select a valid country', (value) => {
+      if (!value) return false;
+      return store.getState().country.countries.includes(value);
     }),
-  country: Yup.string().required('Country is required'),
 });

@@ -7,7 +7,7 @@ interface FormDataProps {
     gender: string;
     country: string;
     terms: boolean;
-    picture?: string;
+    picture: string;
   } | null;
 }
 

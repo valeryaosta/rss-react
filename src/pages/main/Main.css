@@ -12,6 +12,11 @@
   white-space: nowrap;
 }
 
+.form-wrapper p {
+  display: flex;
+  gap: 5px;
+}
+
 .form-wrapper p,
 .form-picture h4 {
   margin: 10px 0;
@@ -24,5 +29,6 @@
 @media (max-width: 800px) {
   .forms-wrapper {
     flex-wrap: wrap;
+    justify-content: center;
   }
 }

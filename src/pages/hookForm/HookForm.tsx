@@ -2,11 +2,12 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/reduxHooks.ts';
+import HookFormAutocomplete from '../../components/hookFormAutocomplete/HookFormAutocomplete.tsx';
 import { saveHookFormData } from '../../store/slices/formSlice.ts';
 import { validationSchemaHookForm } from '../../helpers/validationHelper.ts';
 import '../uncontrolledForm/UncontrolledForm.css';
 
-interface FormInput {
+export interface FormInput {
   name: string;
   age: number;
   email: string;
@@ -14,7 +15,7 @@ interface FormInput {
   confirmPassword: string;
   gender: string;
   terms: boolean;
-  picture?: FileList | null;
+  picture: FileList | null;
   country: string;
 }
 
@@ -22,16 +23,19 @@ const HookForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const countries = ['United States', 'Canada', 'United Kingdom', 'Australia', 'France'];
-
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    watch,
+    setValue,
+    trigger,
   } = useForm({
     mode: 'all',
     resolver: yupResolver(validationSchemaHookForm),
   });
+
+  const countryValue = watch('country');
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
     const terms = data.terms !== undefined ? data.terms : false;
@@ -57,37 +61,32 @@ const HookForm = () => {
       <h1>Hook Form Page</h1>
       <div>
         <label htmlFor='email'>Email</label>
-        <input id='email' type='text' {...register('email')} />
+        <input id='email' type='text' {...register('email')} placeholder='Enter email address' />
         {errors.email && <p>{errors.email.message}</p>}
       </div>
       <div>
         <label htmlFor='password'>Password</label>
-        <input id='password' type='password' {...register('password')} />
+        <input id='password' type='password' {...register('password')} placeholder='Enter password' />
         {errors.password && <p>{errors.password.message}</p>}
       </div>
       <div>
         <label htmlFor='confirmPassword'>Confirm Password</label>
-        <input id='confirmPassword' type='password' {...register('confirmPassword')} />
+        <input id='confirmPassword' type='password' {...register('confirmPassword')} placeholder='Confirm password' />
         {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
       </div>
       <div>
         <label htmlFor='name'>Name</label>
-        <input id='name' type='text' {...register('name')} />
+        <input id='name' type='text' {...register('name')} placeholder='Enter your name' />
         {errors.name && <p>{errors.name.message}</p>}
       </div>
       <div>
         <label htmlFor='age'>Age</label>
-        <input id='age' type='text' {...register('age')} />
+        <input id='age' type='text' {...register('age')} placeholder='Enter your age' />
         {errors.age && <p>{errors.age.message}</p>}
       </div>
       <div>
         <label htmlFor='country'>Country</label>
-        <input id='country' type='text' {...register('country')} list='countryList' />
-        <datalist id='countryList'>
-          {countries.map((country, index) => (
-            <option key={index} value={country} />
-          ))}
-        </datalist>
+        <HookFormAutocomplete value={countryValue} onChange={(value) => setValue('country', value)} trigger={trigger} />
         {errors.country && <p>{errors.country.message}</p>}
       </div>
       <div>
