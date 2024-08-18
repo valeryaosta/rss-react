@@ -5,6 +5,17 @@
 }
 
 .form-wrapper {
+  border: 2px solid transparent;
+  border-radius: 4px;
+  padding: 16px;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.form-wrapper.highlight {
+  border-color: #357b9a;
+  background-color: #bae0e1;
 }
 
 .form-wrapper h2 {

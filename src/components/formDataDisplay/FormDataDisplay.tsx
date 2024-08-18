@@ -9,9 +9,10 @@ interface FormDataProps {
     terms: boolean;
     picture: string;
   } | null;
+  isNew: boolean;
 }
 
-const FormDataDisplay = ({ title, formData }: FormDataProps) => {
+const FormDataDisplay = ({ title, formData, isNew }: FormDataProps) => {
   if (!formData) {
     return (
       <div className='form-wrapper'>
@@ -22,7 +23,7 @@ const FormDataDisplay = ({ title, formData }: FormDataProps) => {
   }
 
   return (
-    <div className='form-wrapper'>
+    <div className={`form-wrapper ${isNew ? 'highlight' : ''}`}>
       <h2>{title}:</h2>
       <p>
         <strong>Name:</strong> {formData.name}

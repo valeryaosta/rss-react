@@ -15,11 +15,13 @@ export interface FormInputData {
 export interface FormsStateData {
   uncontrolledForm: FormInputData | null;
   hookForm: FormInputData | null;
+  lastAddedForm: 'uncontrolled' | 'hook' | null;
 }
 
 const initialState: FormsStateData = {
   uncontrolledForm: null,
   hookForm: null,
+  lastAddedForm: null,
 };
 
 export const formDataSlice = createSlice({
@@ -28,12 +30,17 @@ export const formDataSlice = createSlice({
   reducers: {
     saveUncontrolledFormData(state, action: PayloadAction<FormInputData>) {
       state.uncontrolledForm = action.payload;
+      state.lastAddedForm = 'uncontrolled';
     },
     saveHookFormData(state, action: PayloadAction<FormInputData>) {
       state.hookForm = action.payload;
+      state.lastAddedForm = 'hook';
+    },
+    clearLastAddedForm(state) {
+      state.lastAddedForm = null;
     },
   },
 });
 
-export const { saveUncontrolledFormData, saveHookFormData } = formDataSlice.actions;
+export const { saveUncontrolledFormData, saveHookFormData, clearLastAddedForm } = formDataSlice.actions;
 export default formDataSlice.reducer;
