@@ -1,0 +1,45 @@
+.forms-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 10%;
+}
+
+.form-wrapper {
+  border: 2px solid transparent;
+  border-radius: 4px;
+  padding: 16px;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.form-wrapper.highlight {
+  border-color: #357b9a;
+  background-color: #bae0e1;
+}
+
+.form-wrapper h2 {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.form-wrapper p {
+  display: flex;
+  gap: 5px;
+}
+
+.form-wrapper p,
+.form-picture h4 {
+  margin: 10px 0;
+}
+
+.form-picture img {
+  width: 150px;
+}
+
+@media (max-width: 800px) {
+  .forms-wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

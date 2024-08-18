@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #c4b7b7;
+  background: -webkit-linear-gradient(90deg, #dfd1c0, #ccd5de, #d2dcd0, #b5bac3, #677e98);
+  background: linear-gradient(90deg, #dfd1c0, #ccd5de, #d2dcd0, #b5bac3, #677e98);
+  color: #000000;
+}
+
+input {
+  padding: 10px;
+}
+
+button {
+  padding: 10px;
+  background-color: #155c91;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+ul {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

@@ -1,0 +1,68 @@
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: auto;
+  padding: 10px 15px;
+}
+
+form div {
+  margin-bottom: 10px;
+}
+
+form label {
+  font-size: 12px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  border: 1px solid black;
+}
+
+form input,
+form select {
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+form p {
+  color: red;
+  font-size: 12px;
+  margin: 2px 0;
+}
+
+form button {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form button:disabled {
+  opacity: 0.5;
+}
+
+form .input-terms {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+form .input-terms label {
+  margin-bottom: 0;
+}
+
+form input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+}
+
+form .input-upload input {
+  background: #fff;
+}
